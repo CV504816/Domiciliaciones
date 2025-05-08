@@ -1,0 +1,22 @@
+package mx.profuturo.nci.ws.service.conciliacion;
+
+import mx.profuturo.nci.ws.beans.request.ConciliacionActualizarBeanRequest;
+import mx.profuturo.nci.ws.beans.request.ConciliacionConsultaFolioBeanRequest;
+import mx.profuturo.nci.ws.beans.request.ConciliacionConsultarBeanRequest;
+import mx.profuturo.nci.ws.beans.request.ConciliacionConsultarTotalesBeanRequest;
+import mx.profuturo.nci.ws.beans.request.ConciliacionInsertarBeanRequest;
+import mx.profuturo.nci.ws.beans.response.ConciliacionConsultaFolioBeanResponse;
+import mx.profuturo.nci.ws.beans.response.ConciliacionConsultarBeanResponse;
+import mx.profuturo.nci.ws.beans.response.ConciliacionConsultarCuantosBeanResponse;
+import mx.profuturo.nci.ws.beans.response.ConciliacionConsultarIdPagoBeanResponse;
+
+public interface IConciliacionSoapService {
+	public ConciliacionConsultarBeanResponse consultar(ConciliacionConsultarBeanRequest conciliacionConsultarBeanRequest);
+	public ConciliacionConsultarCuantosBeanResponse consultarCuantosRegistros(ConciliacionConsultarBeanRequest conciliacionConsultarBeanRequest);
+	public Boolean insertar(ConciliacionInsertarBeanRequest conciliacionInsertarBeanRequest);
+	public Boolean actualizar(ConciliacionActualizarBeanRequest conciliacionActualizarBeanRequest);
+	ConciliacionConsultaFolioBeanResponse consultarFolios(ConciliacionConsultaFolioBeanRequest request);
+	public boolean conciliarTotales(ConciliacionConsultarTotalesBeanRequest conciliacionConsultarTotalesBeanRequest); 
+	public ConciliacionConsultarIdPagoBeanResponse consultaIdPagoApovol();
+
+}

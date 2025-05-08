@@ -1,0 +1,18 @@
+package mx.profuturo.nci.ws.service.apovol.reclasificacion;
+
+import mx.profuturo.nci.ws.beans.request.SolicitudReclasificacionActualizarBeanRequest;
+import mx.profuturo.nci.ws.beans.request.SolicitudReclasificacionBeanRequest;
+import mx.profuturo.nci.ws.beans.request.SolicitudReclasificacionConsultarBeanRequest;
+import mx.profuturo.nci.ws.beans.response.SolicitudReclasificacionConsultarBeanResponse;
+
+public interface ISolicitudReclasificacionApoVolSoapService {
+	public SolicitudReclasificacionConsultarBeanResponse guardarSolicitudApoVol(
+			SolicitudReclasificacionBeanRequest solicitudReclasificacionBeanRequest);
+
+	public SolicitudReclasificacionConsultarBeanResponse consultarSolicitudApoVol(
+			SolicitudReclasificacionConsultarBeanRequest solicitudReclasificacionConsultarBeanRequest);
+
+	public Boolean actualizarEstatusSolicitud(
+			SolicitudReclasificacionActualizarBeanRequest solicitudReclasificacionActualizarBeanRequest);
+
+}

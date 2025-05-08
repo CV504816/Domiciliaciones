@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="mx.profuturo.nci.alux.persistence.AluxOssPersistence">
+
+	<resultMap type="mx.profuturo.nci.business.vo.ValidaAluxVO" id="ResultMapValidaOssAlux">
+		<result column="esvalidoAlux" jdbcType="VARCHAR" property="esvalidoAlux"/>
+		<result column="mensaje" jdbcType="VARCHAR" property="mensaje"/>
+	</resultMap>
+
+	<select id="validaAlux" parameterType="String" resultMap="ResultMapValidaOssAlux">
+		WITH ALUX AS(
+			SELECT 
+			    FECHA_ULT_ORDEN_SIEFORE,
+			    TRUNC(SYSDATE) - TRUNC(FECHA_ULT_ORDEN_SIEFORE) DIAS,
+			    CASE WHEN FECHA_ULT_ORDEN_SIEFORE IS NULL THEN NULL ELSE ADD_MONTHS(TRUNC(FECHA_ULT_ORDEN_SIEFORE),36) - TRUNC(FECHA_ULT_ORDEN_SIEFORE) END  DIAS_TOT,
+			    TRUNC(FECHA_ULT_ORDEN_SIEFORE) AS FECHA
+			FROM AFOGNP.TTAFLI_DATO_LIQUIDAR_TAAR WHERE NUMERO_CUENTA=#{fechaPresentacion,jdbcType=VARCHAR} AND CLAVE_OPERACION='09' ORDER BY FECHA_ULT_ORDEN_SIEFORE DESC
+			) 
+			SELECT 
+				(CASE WHEN (NVL(DIAS,0) > NVL(DIAS_TOT,0) OR FECHA IS NULL) THEN 'true' ELSE 'false' END) AS esvalidoAlux,
+				(CASE WHEN (NVL(DIAS,0) > NVL(DIAS_TOT,0) OR FECHA IS NULL)
+			    	THEN '' 
+			    	ELSE ('La cuenta individual realizó un trámite de Orden de Selección de SIEFORE el ' || TO_CHAR(FECHA,'dd/MM/yyyy') || '; por lo que, debe esperar a cumplir 3 años de la última solicitud aplicada.') 
+			    	END) AS mensaje
+			FROM ALUX WHERE ROWNUM=1
+	</select>
+
+</mapper>

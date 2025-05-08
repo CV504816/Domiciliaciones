@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:mvc="http://www.springframework.org/schema/mvc"	
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.2.xsd				
+		http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-3.2.xsd">
+
+	<context:annotation-config/>
+    <context:component-scan base-package="mx.profuturo.nci.web.controller" />
+    
+	<!-- Enables the Spring MVC @Controller programming model -->
+	<mvc:annotation-driven />
+
+		
+	<!-- DispatcherServlet Context: defines this servlet's request-processing 
+		infrastructure -->
+	
+	<!-- import architecture resources defined for DispatcherServlet Context -->
+	<import resource="classpath*:com/jeveris/**/config/servlet/jeveris-*-servlet-config.xml" />
+	
+	<!-- Imports user-defined @Controller beans that process client requests -->
+	<import resource="controllers.xml" />
+	
+	<!-- Enable serving of classpath with Spring 3 resource serving mechanism. -->
+	<mvc:resources location="/, classpath:/META-INF/web-resources/, /core/static/" mapping="/resources/**" />
+	
+	<!--  Uncomment this file include if JSP Presentation Technology module is added to the project through j-everis plugin -->
+	<!-- 	<import resource="servlet-context-mvcjsp.xml" />	 -->
+	<!--  Uncomment this file include if PrimeFaces Presentation Technology module is added to the project through j-everis plugin -->
+	<!-- 	<import resource="servlet-context-primefaces.xml" />	 -->
+	<!--  Uncomment this file include if  ZK Presentation Technology module is added to the project through j-everis plugin -->
+	<!-- 	<import resource="servlet-context-zk.xml" />	 -->
+	<!--  Uncomment this file include if webflow module is added to the project through j-everis plugin -->
+	<!-- 	<import resource="spring-webflow.xml" />	 -->
+		
+</beans>

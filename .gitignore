@@ -1,0 +1,49 @@
+# Ignorar archivos compilados de Java
+*.class
+
+# Ignorar archivos generados por el compilador de Java
+*.log
+*.war
+*.ear
+*.jar
+
+# Ignorar directorios de dependencias
+target/
+build/
+
+# Ignorar archivos de configuración de IDEs comunes
+.vscode/
+.idea/
+*.iml
+
+# Ignorar archivos de configuración de Maven
+.mvn/
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+release.properties
+
+# Ignorar archivos de configuración de Gradle
+.gradle/
+gradle-wrapper.jar
+gradle-wrapper.properties
+
+# Ignorar archivos de configuración de Eclipse
+.settings/
+
+# Ignorar archivos de configuración de NetBeans
+nbproject/
+
+# Ignorar archivos temporales del sistema operativo
+Thumbs.db
+Desktop.ini
+
+# Ignorar la carpeta Servers que está en la raíz del proyecto
+/Servers/
+/RemoteSystemsTempFiles/
+
+# Ignorar archivos temporales de editores de texto
+*~
+*.swp
+/.metadata/
+/.sonarlint/

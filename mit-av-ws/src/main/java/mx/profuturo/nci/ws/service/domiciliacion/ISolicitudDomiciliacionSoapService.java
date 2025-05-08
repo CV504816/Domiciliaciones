@@ -1,0 +1,36 @@
+package mx.profuturo.nci.ws.service.domiciliacion;
+
+import mx.profuturo.nci.ws.beans.request.NotificacionConciliacionApovolRequest;
+import mx.profuturo.nci.ws.beans.request.SolicitudDomiciliacionActualizarBeanRequest;
+import mx.profuturo.nci.ws.beans.request.SolicitudDomiciliacionActualizarConBeanRequest;
+import mx.profuturo.nci.ws.beans.request.SolicitudDomiciliacionConsultarBeanRequest;
+import mx.profuturo.nci.ws.beans.request.SolicitudDomiciliacionConsultarSumBeanRequest;
+import mx.profuturo.nci.ws.beans.request.SolicitudDomiciliacionInsertarBeanRequest;
+import mx.profuturo.nci.ws.beans.request.SolicitudDomiciliacionObtenerClaveBeanRequest;
+import mx.profuturo.nci.ws.beans.response.NotificacionConciliacionApovolResponse;
+import mx.profuturo.nci.ws.beans.response.SolicitudDomiciliacionConsultarBeanResponse;
+import mx.profuturo.nci.ws.beans.response.SolicitudDomiciliacionConsultarSumBeanResponse;
+import mx.profuturo.nci.ws.beans.response.SolicitudDomiciliacionObtenerClaveBeanResponse;
+
+public interface ISolicitudDomiciliacionSoapService {
+
+	public SolicitudDomiciliacionConsultarBeanResponse consultar(
+			SolicitudDomiciliacionConsultarBeanRequest solicitudDomiciliacionConsultarBeanRequest);
+	
+	public SolicitudDomiciliacionConsultarBeanResponse consultarConciliaciones(
+			SolicitudDomiciliacionConsultarBeanRequest solicitudDomiciliacionConsultarBeanRequest);
+	
+	public SolicitudDomiciliacionObtenerClaveBeanResponse obtenerClaveSolicitud(
+			SolicitudDomiciliacionObtenerClaveBeanRequest solicitudDomiciliacionObtenerClaveBeanRequest);
+
+	public SolicitudDomiciliacionConsultarSumBeanResponse consultarMonto(
+			SolicitudDomiciliacionConsultarSumBeanRequest solicitudDomiciliacionConsultarMontoBeanRequest);
+	
+	public boolean Insertar(SolicitudDomiciliacionInsertarBeanRequest solicitudDomiciliacionInsertarBeanRequest);
+
+	public boolean Actualizar(SolicitudDomiciliacionActualizarBeanRequest solicitudDomiciliacionActualizarBeanRequest);
+	
+	public NotificacionConciliacionApovolResponse consultarNotificacionConciliacionApovol (NotificacionConciliacionApovolRequest notificacionConciliacionApovolRequest);
+	
+	public boolean consultaActualizarConciliacion(SolicitudDomiciliacionActualizarConBeanRequest solicitudDomiciliacionActualizarConBeanRequest);
+}
