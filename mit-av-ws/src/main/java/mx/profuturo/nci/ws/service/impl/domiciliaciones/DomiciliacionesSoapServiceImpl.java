@@ -942,8 +942,8 @@ public class DomiciliacionesSoapServiceImpl implements IDomiciliacionesSoapServi
 			}
 
 			// Obtener nombre del contrato (Se realiza validacion)
-			nombreContrato = this.domiciliacionesService.getNombreContrato(request.getIdTipoContrato());
-
+			//nombreContrato = this.domiciliacionesService.getNombreContrato(request.getIdTipoContrato());
+			nombreContrato = "PGA-961220PB4";
 			if (nombreContrato == null || nombreContrato.equals("-1") || nombreContrato.equals("")) {
 
 				return new GeneracionArchivosDomiBeanResponse(CtrlResponseWSEnum.WS_INPUT_ERROR.getCodRet(),

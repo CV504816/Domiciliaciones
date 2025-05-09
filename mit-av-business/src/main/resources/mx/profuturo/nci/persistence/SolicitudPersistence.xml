@@ -301,7 +301,7 @@
 				SELECT c.FCN_ID_CAT_CATALOGO
 				FROM TCCRXGRAL_CAT_CATALOGO c
 				WHERE c.FCN_ID_TIPO_CAT = ${@mx.profuturo.nci.business.util.ConstantesCatalogos@ID_TIPO_CATALOGO_BANCOS} 
-					AND c.FCN_ID_CAT_CATALOGO NOT IN(${@mx.profuturo.nci.business.util.ConstantesCatalogos@ID_BANAMEX_NCI},${@mx.profuturo.nci.business.util.ConstantesCatalogos@ID_BANCOMER_NCI}))
+					AND c.FCN_ID_CAT_CATALOGO NOT IN ${@mx.profuturo.nci.business.util.ConstantesCatalogos@ID_BANCOMER_NCI})
 				<if test="idsBancos != null  and idsBancos.size() > 0">
 					)
 				</if>
