@@ -5,7 +5,7 @@ import java.util.List;
 import org.beanio.annotation.Group;
 import org.beanio.annotation.Record;
 
-
+/*Eliminado para la carta OP-291-PY
 @Group(minOccurs=0, maxOccurs=-1)
 public class BanamexDomiFixLenghtFileRecordBeanPar{
 	
@@ -43,3 +43,4 @@ public class BanamexDomiFixLenghtFileRecordBeanPar{
 	}
 	
 }
+ */

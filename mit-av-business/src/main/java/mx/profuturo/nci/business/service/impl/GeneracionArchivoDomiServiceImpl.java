@@ -1,27 +1,27 @@
 package mx.profuturo.nci.business.service.impl;
 
-import static mx.profuturo.nci.business.util.Constantes.DOMI_FILES_DATE_FORMAT_BANAMEX;
+//import static mx.profuturo.nci.business.util.Constantes.DOMI_FILES_DATE_FORMAT_BANAMEX;
 import static mx.profuturo.nci.business.util.Constantes.DOMI_FILES_DATE_FORMAT_BANCOMER;
-import static mx.profuturo.nci.business.util.Constantes.FILE_NAME_EXT_DOMICILIACIONES_BANAMEX;
+//import static mx.profuturo.nci.business.util.Constantes.FILE_NAME_EXT_DOMICILIACIONES_BANAMEX;
 import static mx.profuturo.nci.business.util.Constantes.FILE_NAME_EXT_DOMICILIACIONES_BANCOMER;
 import static mx.profuturo.nci.business.util.Constantes.FILE_NAME_OFFSET_DOMICILIACIONES_TRASPASO;
-import static mx.profuturo.nci.business.util.Constantes.FILE_NAME_PART_DOMICILIACIONES_BANAMEX;
+//import static mx.profuturo.nci.business.util.Constantes.FILE_NAME_PART_DOMICILIACIONES_BANAMEX;
 import static mx.profuturo.nci.business.util.Constantes.FILE_NAME_PART_DOMICILIACIONES_BANCOMER;
-import static mx.profuturo.nci.business.util.Constantes.ID_BANAMEX_DOMICILIACIONES;
+//import static mx.profuturo.nci.business.util.Constantes.ID_BANAMEX_DOMICILIACIONES;
 import static mx.profuturo.nci.business.util.Constantes.ID_BANCOMER_DOMICILIACIONES;
 import static mx.profuturo.nci.business.util.Constantes.ID_ESTATUS_ARCHIVO_DOMI_GENERADO;
 import static mx.profuturo.nci.business.util.Constantes.ID_ESTATUS_ARCHIVO_DOMI_EN_PROCESO;
 import static mx.profuturo.nci.business.util.Constantes.ID_ESTATUS_ARCHIVO_DOMI_CANCELADO;
-import static mx.profuturo.nci.business.util.Constantes.PATH_ACHIVO_DOMI_BANAMEX;
+//import static mx.profuturo.nci.business.util.Constantes.PATH_ACHIVO_DOMI_BANAMEX;
 import static mx.profuturo.nci.business.util.Constantes.PATH_ACHIVO_DOMI_BANCOMER;
 import static mx.profuturo.nci.business.util.Constantes.SPECIAL_CHARACTERS_REPLACERS;
 import static mx.profuturo.nci.business.util.Constantes.BANCOMER_CONSECUTIVE_PADDING_POSITIONS;
-import static mx.profuturo.nci.business.util.Constantes.BANAMEX_CONSECUTIVE_PADDING_POSITIONS;
+//import static mx.profuturo.nci.business.util.Constantes.BANAMEX_CONSECUTIVE_PADDING_POSITIONS;
 import static mx.profuturo.nci.business.util.Constantes.DOMICILIACIONES_MONTO_MAXIMO_ENVIO_BANCO;
 import static mx.profuturo.nci.business.util.Constantes.ID_CAT_CATALOGO_MONTO_MAXIMO_ENVIO_BANCO;
 import static mx.profuturo.nci.business.util.Constantes.ID_UNICA_PARCIALIDAD;
 import static mx.profuturo.nci.business.util.Constantes.ID_MAS_DE_UNA_PARCIALIDAD;
-import static mx.profuturo.nci.business.util.ConstantesCatalogos.ID_BANAMEX_NCI;
+//import static mx.profuturo.nci.business.util.ConstantesCatalogos.ID_BANAMEX_NCI;
 import static mx.profuturo.nci.business.util.ConstantesCatalogos.ID_BANCOMER_NCI;
 import static mx.profuturo.nci.business.util.ConstantesCatalogos.ID_ESTATUS_CARGO_GENERADO;
 import static mx.profuturo.nci.business.util.ConstantesCatalogos.ID_ORIGEN_DOMICILIACION_TRASPASO;
@@ -53,7 +53,7 @@ import mx.profuturo.nci.business.exception.ErrorCodeService;
 import mx.profuturo.nci.business.exception.GenerateExceptionDetails;
 import mx.profuturo.nci.business.exception.MitBusinessException;
 import mx.profuturo.nci.business.file.generator.bean.BanamexDomiFixLenghtFileRecordBean;
-import mx.profuturo.nci.business.file.generator.bean.BanamexDomiFixLenghtFileRecordBeanPar;
+//import mx.profuturo.nci.business.file.generator.bean.BanamexDomiFixLenghtFileRecordBeanPar;
 import mx.profuturo.nci.business.file.generator.bean.BanamexDomiFooterRecordBean;
 import mx.profuturo.nci.business.file.generator.bean.BanamexDomiHeaderRecordBean;
 import mx.profuturo.nci.business.file.generator.bean.BanamexDomiHeaderRecordBeanPar;
@@ -356,12 +356,14 @@ public class GeneracionArchivoDomiServiceImpl implements IGeneracionArchivoDomiS
 			
 			if(insertCargos(domis, idArchivo, solicitudFilter.getUsuarioCreacion(), catDivPrioridades)) {
 				try {
+					/* Cambio por carta OP-291-PY
 					if(ID_BANAMEX_NCI.equals(solicitudFilter.getIdTipoArchivo())){
 						BanamexDomiFixLenghtFileRecordBeanPar bmxRecords =  mapVOToBanamexRecordBean(domis, consecutivo, fecha, idArchivo);
 						swPar = fileGeneratorService.generateFile(bmxRecords);
 						LOGGER.info(swPar.getBuffer().toString());
 						namePar.append(PATH_ACHIVO_DOMI_BANAMEX);
-					}else if(ID_BANCOMER_NCI.equals(solicitudFilter.getIdTipoArchivo())){
+					}*/ 
+					if(ID_BANCOMER_NCI.equals(solicitudFilter.getIdTipoArchivo())){
 						BancomerDomiFixLenghtFileRecordBeanPar bbvaRecords = mapVOToBancomerRecordBean(domis, consecutivo, fecha, idArchivo);
 						swPar = fileGeneratorService.generateFile(bbvaRecords);
 						LOGGER.info(swPar.getBuffer().toString());
@@ -414,7 +416,7 @@ public class GeneracionArchivoDomiServiceImpl implements IGeneracionArchivoDomiS
 		StringBuffer namePar 										= null;
 		
 		Long idArchivo 												= null;
-		BanamexDomiFixLenghtFileRecordBeanPar bmxRecords 			= null;
+		//BanamexDomiFixLenghtFileRecordBeanPar bmxRecords 			= null;
 		BancomerDomiFixLenghtFileRecordBeanPar bbvaRecords 			= null;
 		
 		try{
@@ -458,12 +460,14 @@ public class GeneracionArchivoDomiServiceImpl implements IGeneracionArchivoDomiS
 				try {
 					
 					System.out.println("GENERAMOS ARCHIVO F4 ");
+					/*Cambio por carta OP-291-PY
 					if(ID_BANAMEX_NCI.equals(solicitudFilter.getIdTipoArchivo())){									  
 						bmxRecords =  mapVOToBanamexRecordBeanF4(domis, consecutivo, fecha, idArchivo);
 						swPar = fileGeneratorService.generateFileF4(bmxRecords);
 						LOGGER.info(swPar.getBuffer().toString());
 						namePar.append(PATH_ACHIVO_DOMI_BANAMEX);
-					}else if(ID_BANCOMER_NCI.equals(solicitudFilter.getIdTipoArchivo())){
+					}*/
+					if(ID_BANCOMER_NCI.equals(solicitudFilter.getIdTipoArchivo())){
 						bbvaRecords = mapVOToBancomerRecordBeanF4(domis, consecutivo, fecha, idArchivo);
 						swPar = fileGeneratorService.generateFileF4(bbvaRecords);
 						LOGGER.info( swPar.getBuffer().toString() );
@@ -527,7 +531,7 @@ public class GeneracionArchivoDomiServiceImpl implements IGeneracionArchivoDomiS
 			dfbPar 				= null;
 			namePar 			= null;
 			idArchivo 			= null;
-			bmxRecords 			= null;
+			//bmxRecords 			= null;
 			bbvaRecords 		= null;
 		}
 	}
@@ -1365,7 +1369,7 @@ public class GeneracionArchivoDomiServiceImpl implements IGeneracionArchivoDomiS
 	}
 	
 	
-	
+	/* Cambio por carta OP-291-PY
 	//FOP 2229 Nuevos metodos
 	private BanamexDomiFixLenghtFileRecordBeanPar  mapVOToBanamexRecordBeanF4(List<SolicitudVO> solicitudes,Integer consecutivo, Date fecha, Long idArchivo){
 			
@@ -1469,7 +1473,7 @@ public class GeneracionArchivoDomiServiceImpl implements IGeneracionArchivoDomiS
 		bean.setFooter(footer);
 		return bean;
 	}
-	
+	*/
 	
 	
 	private BancomerDomiFixLenghtFileRecordBeanPar  mapVOToBancomerRecordBeanF4(List<SolicitudVO> solicitudes,Integer consecutivo,Date fecha, Long idArchivo){
@@ -1662,7 +1666,7 @@ public class GeneracionArchivoDomiServiceImpl implements IGeneracionArchivoDomiS
 		return records;
 	}	
 	
-	
+	/* Cambio por carta OP-291-PY
 	private List<BanamexDomiRecordRecordBeanPar> getBanamexRecordsF4(SolicitudVO sol, Date fecha) {
 		
 		List<BanamexDomiRecordRecordBeanPar> records 	= null;
@@ -1755,6 +1759,7 @@ public class GeneracionArchivoDomiServiceImpl implements IGeneracionArchivoDomiS
 		return records;
 		
 	}
+	*/
 	
 	private List<BigDecimal> parcializaMonto(BigDecimal monto, BigDecimal maxMontoParcial){
 		List<BigDecimal> parcialidades = new ArrayList<BigDecimal>();
@@ -1811,6 +1816,7 @@ public class GeneracionArchivoDomiServiceImpl implements IGeneracionArchivoDomiS
 		}
 	}
 	
+	/* Cambio por OP-291-PY
 	private BanamexDomiFixLenghtFileRecordBean  mapVOToBanamexRecordBean(List<SolicitudVO> solicitudes,Integer consecutivo, Date fecha){
 		Integer numSeq=0;
 		BanamexDomiFixLenghtFileRecordBean bean = new BanamexDomiFixLenghtFileRecordBean();
@@ -1861,6 +1867,7 @@ public class GeneracionArchivoDomiServiceImpl implements IGeneracionArchivoDomiS
 		bean.setFooter(footer);
 		return bean;
 	}
+	*/
 	
 	private String cleanSpecialCaracters(String string){
 		if(string!=null){
@@ -1897,6 +1904,7 @@ public class GeneracionArchivoDomiServiceImpl implements IGeneracionArchivoDomiS
 //					.append(FILE_NAME_EXT_DOMICILIACIONES_BANCOMER);
 //			}
 //		}else{ 
+		/* Cambio por OP-291-PY
 			if(ID_BANAMEX_NCI.equals(type)){
 				SimpleDateFormat sdf = new SimpleDateFormat(DOMI_FILES_DATE_FORMAT_BANAMEX);
 				fileName.append(ID_BANAMEX_DOMICILIACIONES)
@@ -1908,7 +1916,8 @@ public class GeneracionArchivoDomiServiceImpl implements IGeneracionArchivoDomiS
 								'0')
 							)
 					.append(FILE_NAME_EXT_DOMICILIACIONES_BANAMEX);
-			}else if(ID_BANCOMER_NCI.equals(type)){
+			}*/ 
+			if(ID_BANCOMER_NCI.equals(type)){
 				SimpleDateFormat sdf = new SimpleDateFormat(DOMI_FILES_DATE_FORMAT_BANCOMER);
 				fileName.append( ID_BANCOMER_DOMICILIACIONES+sdf.format(fecha))
 					.append(FILE_NAME_PART_DOMICILIACIONES_BANCOMER	)

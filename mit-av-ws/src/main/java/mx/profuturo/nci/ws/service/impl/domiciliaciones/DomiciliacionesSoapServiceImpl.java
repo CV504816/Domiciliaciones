@@ -943,7 +943,7 @@ public class DomiciliacionesSoapServiceImpl implements IDomiciliacionesSoapServi
 
 			// Obtener nombre del contrato (Se realiza validacion)
 			//nombreContrato = this.domiciliacionesService.getNombreContrato(request.getIdTipoContrato());
-			nombreContrato = "PGA-961220PB4";
+			nombreContrato = "PGA-961220PB4"; //Modificado para la fase de pruebas
 			if (nombreContrato == null || nombreContrato.equals("-1") || nombreContrato.equals("")) {
 
 				return new GeneracionArchivosDomiBeanResponse(CtrlResponseWSEnum.WS_INPUT_ERROR.getCodRet(),
@@ -1010,13 +1010,17 @@ public class DomiciliacionesSoapServiceImpl implements IDomiciliacionesSoapServi
 							// original
 							resultados.add(archivoGenerado);
 
-							// Se anexa ruta
+							// Se anexa ruta -Modificado para clave OP-291-PY
+							/* Código original comentado:
 							if (ID_BANAMEX_NCI.equals(filtro.getIdTipoArchivo())) {
-								pathFile = PATH_ACHIVO_DOMI_BANAMEX;
+							    pathFile = PATH_ACHIVO_DOMI_BANAMEX;
 							} else if (ID_BANCOMER_NCI.equals(filtro.getIdTipoArchivo())) {
-								pathFile = PATH_ACHIVO_DOMI_BANCOMER;
+							    pathFile = PATH_ACHIVO_DOMI_BANCOMER;
 							}
-
+							*/
+							if (ID_BANCOMER_NCI.equals(filtro.getIdTipoArchivo())) {
+							    pathFile = PATH_ACHIVO_DOMI_BANCOMER;
+							    }
 							// Se determina el tipo de cuenta
 							if (filtro.getIdsTiposCuenta() != null) {
 								idTipoCuentaGenerado = (filtro.getIdsTiposCuenta().size() > 1) ? "0"
