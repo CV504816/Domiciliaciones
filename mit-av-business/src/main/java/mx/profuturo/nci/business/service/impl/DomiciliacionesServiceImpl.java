@@ -554,7 +554,6 @@ public class DomiciliacionesServiceImpl implements IDomiciliacionesService{
 			
 			if( ID_BANCOMER_NCI.equals(type) ) {
 				sdf = new SimpleDateFormat(DOMI_FILES_DATE_FORMAT_BANCOMER);
-				
 				fileName.append( ID_BANCOMER_DOMICILIACIONES+sdf.format(fecha))
 						.append(FILE_NAME_PART_DOMICILIACIONES_BANCOMER	)
 						.append(StringUtils.leftPad( String.valueOf(consecutivo)
@@ -576,6 +575,7 @@ public class DomiciliacionesServiceImpl implements IDomiciliacionesService{
 		}
 	}
 	
+	//Modificado para la carta OP-291-PY Christopher
 	@Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
 	public String generarArchivoDomiF4Mant ( SolicitudFilter solicitudFilter
 									       , Date fecha
@@ -687,7 +687,7 @@ public class DomiciliacionesServiceImpl implements IDomiciliacionesService{
 	}
 	
 	
-	
+	//Modificado para la carta OP-291-PY Christopher
 	@Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
 	public List <RespGeneracionArchivosDomi> generarArchivoDomiF4MantLotes ( SolicitudFilter solicitudFilter
 										        	   					   , Date fecha
@@ -716,11 +716,10 @@ public class DomiciliacionesServiceImpl implements IDomiciliacionesService{
 		Integer consecutivo														= null;
 		String idBancoGenerado													= null;
 		Boolean actualizarSolicitudes											= null;
-		
 		try {
 			archivo = "";
 			arrArchivosGenerados = new ArrayList <RespGeneracionArchivosDomi> ();
-			
+
 			// Regitros a grabar en archivo (  Registros originales (sin parcialidades) )
 			//domis = solicitudPersistence.selectDomiRecords(solicitudFilter);
 			domis = solicitudPersistence.selectDomiRecordsParcialidades(solicitudFilter);
@@ -730,17 +729,18 @@ public class DomiciliacionesServiceImpl implements IDomiciliacionesService{
 			paramCatalogoVO.setIdCatalogo( new Short(ID_CAT_CATALOGO_MONTO_MAXIMO_ENVIO_BANCO) );
 			ltsImporteMax = new ArrayList<CatalogoVO>();
 			ltsImporteMax = catalogosService.consultarLista(paramCatalogoVO);
-			
 			if( !ltsImporteMax.isEmpty() ) {
 				DOMICILIACIONES_MONTO_MAXIMO_ENVIO_BANCO = new BigDecimal(ltsImporteMax.get(0).getValor());
 			}
 			
 			// Registro vacío
+
 			if(domis.isEmpty()) {
 				message = this.getFileGeneratedData(archivo, solicitudFilter) + " - "+"No se encontraron registros para los parámetros especificados";
 				arrArchivosGenerados.add(new RespGeneracionArchivosDomi (message, "") );
 				return arrArchivosGenerados;
 			}
+			
 			
 			// Se determina el banco ("Ctas a incluir")
 			if (solicitudFilter.getIdsBancos() != null && !solicitudFilter.getIdsBancos().isEmpty()) {
@@ -748,9 +748,8 @@ public class DomiciliacionesServiceImpl implements IDomiciliacionesService{
 			} else {
 				idBancoGenerado = "848";
 			}
-			
-	        /* ============================================= */
-	        /* === CÓDIGO BANAMEX COMENTADO - CARTA OP-291-PY === */
+
+			/* === CÓDIGO BANAMEX COMENTADO - CARTA OP-291-PY === */
 	        /*
 	        if(ID_BANAMEX_NCI.equals(solicitudFilter.getIdTipoArchivo())) {
 	            // Consectivo del archivo
@@ -789,15 +788,11 @@ public class DomiciliacionesServiceImpl implements IDomiciliacionesService{
 	            }
 	        } else 
 	        */
-	        /* === CÓDIGO BANAMEX COMENTADO - FIN === */
-	        /* ======================================= */
-				
+
 			if(ID_BANCOMER_NCI.equals( solicitudFilter.getIdTipoArchivo()) ) {
-				
 				if ( contrato.equals("PGA-961220PB4") ) {
-					
+
 					if (idBancoGenerado.equals("460")) { // Lotes
-						
 						// Tamaño maximo de cada archivo
 						tamMax = this.obtenerTamMaximoArchivo( contrato
 														   	 , String.valueOf( solicitudFilter.getIdTipoArchivo() )
@@ -906,7 +901,6 @@ public class DomiciliacionesServiceImpl implements IDomiciliacionesService{
 				} else if ( contrato.equals("PGA 961220PB4") ) {
 					
 					if ( !idBancoGenerado.equals("460") ) { // Lotes
-						
 						// Tamaño maximo de cada archivo
 						tamMax = this.obtenerTamMaximoArchivo( contrato
 							   	 						     , String.valueOf( solicitudFilter.getIdTipoArchivo() )
@@ -1065,10 +1059,9 @@ public class DomiciliacionesServiceImpl implements IDomiciliacionesService{
 					//tamMax = 250; // 10000 
 				}
 			} else if ( contrato.equals("PGA 961220PB4") ) {
-				
 				if( !bancoCuentas.equals("460") ) {
 					// Obtenemos la cantidad maxima de registros para archivo BBVA con cuentas distintas a BBVA
-					filter = new TipoRegistrosMaxFilter("9534");
+					filter = new TipoRegistrosMaxFilter("9533");
 					registrosMax = archivoDomiPersistence.obtenerRegistrosMaximosArchivo(filter);
 					tamMax = Integer.parseInt(registrosMax.getCantidad());
 					//tamMax = 500; // 20000

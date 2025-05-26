@@ -8,9 +8,15 @@ import static mx.profuturo.nci.business.util.Constantes.PATH_ACHIVO_DOMI_BANAMEX
 import static mx.profuturo.nci.business.util.Constantes.PATH_ACHIVO_DOMI_BANCOMER;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -100,10 +106,10 @@ public class DomiciliacionesSoapServiceImpl implements IDomiciliacionesSoapServi
 
 			return response;
 		} catch (Exception e) {
-			LOGGER.error("ERROR UBICACIÓN    :" + DomiciliacionesSoapServiceImpl.class.getCanonicalName());
+			LOGGER.error("ERROR UBICACIÃ“N    :" + DomiciliacionesSoapServiceImpl.class.getCanonicalName());
 			LOGGER.error("ERROR METODO       :" + "consultarTipoProcesamientoDomi");
 			LOGGER.error("ERROR MENSAJE      :" + e.getMessage());
-			LOGGER.error("ERROR DESCRIPCIÓN  :", e);
+			LOGGER.error("ERROR DESCRIPCIÃ“N  :", e);
 			FaultBeanServiceInfo missing = new FaultBeanServiceInfo();
 			missing.setFaultstring(CtrlResponseWSEnum.WS_ERROR.getMsgRet() + ", DomiciliacionesSoapServiceImpl");
 			throw new MitWebServiceException(e.getMessage(), missing);
@@ -128,7 +134,7 @@ public class DomiciliacionesSoapServiceImpl implements IDomiciliacionesSoapServi
 						CtrlResponseWSEnum.WS_INPUT_ERROR.getMsgRet(), "Request, es necesario para el servicio.");
 			}
 
-			// Validación de request
+			// ValidaciÃ³n de request
 			if (!(val = request.validarRequest()).isEstatus()) {
 
 				return new ArchivosDomiBitacoraBeanResponse(CtrlResponseWSEnum.WS_INPUT_ERROR.getCodRet(),
@@ -163,10 +169,10 @@ public class DomiciliacionesSoapServiceImpl implements IDomiciliacionesSoapServi
 
 			return response;
 		} catch (Exception e) {
-			LOGGER.error("ERROR UBICACIÓN    :" + DomiciliacionesSoapServiceImpl.class.getCanonicalName());
+			LOGGER.error("ERROR UBICACIÃ“N    :" + DomiciliacionesSoapServiceImpl.class.getCanonicalName());
 			LOGGER.error("ERROR METODO       :" + "consultarArchivosDomiBitacora");
 			LOGGER.error("ERROR MENSAJE      :" + e.getMessage());
-			LOGGER.error("ERROR DESCRIPCIÓN  :", e);
+			LOGGER.error("ERROR DESCRIPCIÃ“N  :", e);
 			FaultBeanServiceInfo missing = new FaultBeanServiceInfo();
 			missing.setFaultstring(CtrlResponseWSEnum.WS_ERROR.getMsgRet() + ", DomiciliacionesSoapServiceImpl");
 			throw new MitWebServiceException(e.getMessage(), missing);
@@ -200,18 +206,18 @@ public class DomiciliacionesSoapServiceImpl implements IDomiciliacionesSoapServi
 								: CtrlResponseWSEnum.WS_OK.getCodRet(),
 						(valores.isEmpty()) ? CtrlResponseWSEnum.WS_NO_RECORD.getMsgRet()
 								: CtrlResponseWSEnum.WS_OK.getMsgRet(),
-						(valores.isEmpty()) ? "No existen registros con ese tipo de Catálogo" : "Consulta Exitosa",
+						(valores.isEmpty()) ? "No existen registros con ese tipo de CatÃ¡logo" : "Consulta Exitosa",
 						valores);
 				return response;
 			} else {
 
-				// Validación de request
+				// ValidaciÃ³n de request
 				if (!(val = request.validarRequest()).isEstatus()) {
 					return new CatalogosDomiBeanResponse(CtrlResponseWSEnum.WS_INPUT_ERROR.getCodRet(),
 							CtrlResponseWSEnum.WS_INPUT_ERROR.getMsgRet(), val.getMensaje());
 				}
 
-				// Validación del tipo de catalogo
+				// ValidaciÃ³n del tipo de catalogo
 				if ((Integer.parseInt(request.getTipoCatalogo()) > 5)
 						|| (Integer.parseInt(request.getTipoCatalogo()) < 0)) {
 					return new CatalogosDomiBeanResponse(CtrlResponseWSEnum.WS_INPUT_ERROR.getCodRet(),
@@ -235,10 +241,10 @@ public class DomiciliacionesSoapServiceImpl implements IDomiciliacionesSoapServi
 			return response;
 
 		} catch (Exception e) {
-			LOGGER.error("ERROR UBICACIÓN    :" + DomiciliacionesSoapServiceImpl.class.getCanonicalName());
+			LOGGER.error("ERROR UBICACIÃ“N    :" + DomiciliacionesSoapServiceImpl.class.getCanonicalName());
 			LOGGER.error("ERROR METODO       :" + "catalogosControlDomi");
 			LOGGER.error("ERROR MENSAJE      :" + e.getMessage());
-			LOGGER.error("ERROR DESCRIPCIÓN  :", e);
+			LOGGER.error("ERROR DESCRIPCIÃ“N  :", e);
 
 			FaultBeanServiceInfo missing = new FaultBeanServiceInfo();
 			missing.setFaultstring(CtrlResponseWSEnum.WS_ERROR.getMsgRet() + ", DomiciliacionesSoapServiceImpl");
@@ -308,18 +314,17 @@ public class DomiciliacionesSoapServiceImpl implements IDomiciliacionesSoapServi
 						"3", Boolean.TRUE, "MSG", "PATH"));
 
 				response = new GeneracionArchivosDomiBeanResponse(CtrlResponseWSEnum.WS_OK.getCodRet(),
-						CtrlResponseWSEnum.WS_OK.getMsgRet(), "Generación de archivos correcta", valores,
+						CtrlResponseWSEnum.WS_OK.getMsgRet(), "GeneraciÃ³n de archivos correcta", valores,
 						request.getFolio());
 			} else {
-				// Inicialización de variables
+				// InicializaciÃ³n de variables
 				resultados = new ArrayList<GeneracionArchivoDomiVO>();
 				valores = new ArrayList<ArchivoDomiVO>();
-
 				// Request to filter
 				filters = this.domiciliacionesService.getDomiParameterMapFilter(
 						new PeticionesDomiFilter(request.getOrigenAportacion(), request.getFechaInicio(),
 								request.getFechaFin(), request.getUsuario(), request.getPeticiones()));
-
+				System.out.println("AQUI YA PASO");
 				filtros = this.domiciliacionesService.getCustomFilter(filters);
 
 				// Generar archivos
@@ -374,7 +379,7 @@ public class DomiciliacionesSoapServiceImpl implements IDomiciliacionesSoapServi
 							archivoGenerado.getErrors().add(error[0]);
 						}
 
-						// Se agrega resultado (independientemente si se generó o no) a la lista
+						// Se agrega resultado (independientemente si se generÃ³ o no) a la lista
 						// original
 						resultados.add(archivoGenerado);
 
@@ -425,7 +430,7 @@ public class DomiciliacionesSoapServiceImpl implements IDomiciliacionesSoapServi
 
 					}
 
-					// Formalización del response
+					// FormalizaciÃ³n del response
 					if (valores != null && !valores.isEmpty()) {
 						response = new GeneracionArchivosDomiBeanResponse(CtrlResponseWSEnum.WS_OK.getCodRet(),
 								CtrlResponseWSEnum.WS_OK.getMsgRet(),
@@ -448,10 +453,10 @@ public class DomiciliacionesSoapServiceImpl implements IDomiciliacionesSoapServi
 
 			return response;
 		} catch (Exception e) {
-			LOGGER.error("ERROR UBICACIÓN    :" + DomiciliacionesSoapServiceImpl.class.getCanonicalName());
+			LOGGER.error("ERROR UBICACIÃ“N    :" + DomiciliacionesSoapServiceImpl.class.getCanonicalName());
 			LOGGER.error("ERROR METODO       :" + "generarArchivosDomi");
 			LOGGER.error("ERROR MENSAJE      :" + e.getMessage());
-			LOGGER.error("ERROR DESCRIPCIÓN  :", e);
+			LOGGER.error("ERROR DESCRIPCIÃ“N  :", e);
 			FaultBeanServiceInfo missing = new FaultBeanServiceInfo();
 			missing.setFaultstring(CtrlResponseWSEnum.WS_ERROR.getMsgRet() + ", DomiciliacionesSoapServiceImpl");
 			throw new MitWebServiceException(e.getMessage(), missing);
@@ -488,7 +493,7 @@ public class DomiciliacionesSoapServiceImpl implements IDomiciliacionesSoapServi
 		ValidacionesVO val = null;
 
 		try {
-			// Validación reponse nulo
+			// ValidaciÃ³n reponse nulo
 			if (request == null) {
 				return new ArchivosGeneradosDomiBeanResponse(CtrlResponseWSEnum.WS_INPUT_ERROR.getCodRet(),
 						CtrlResponseWSEnum.WS_INPUT_ERROR.getMsgRet(), "Request, es necesario para el servicio.");
@@ -513,7 +518,7 @@ public class DomiciliacionesSoapServiceImpl implements IDomiciliacionesSoapServi
 				return response;
 			} else {
 
-				// Validación de request
+				// ValidaciÃ³n de request
 				if (!(val = request.validarOrigenAportacion()).isEstatus()) {
 					return new ArchivosGeneradosDomiBeanResponse(CtrlResponseWSEnum.WS_INPUT_ERROR.getCodRet(),
 							CtrlResponseWSEnum.WS_INPUT_ERROR.getMsgRet(), val.getMensaje());
@@ -543,10 +548,10 @@ public class DomiciliacionesSoapServiceImpl implements IDomiciliacionesSoapServi
 			return response;
 
 		} catch (Exception e) {
-			LOGGER.error("ERROR UBICACIÓN :" + DomiciliacionesSoapServiceImpl.class.getCanonicalName());
+			LOGGER.error("ERROR UBICACIÃ“N :" + DomiciliacionesSoapServiceImpl.class.getCanonicalName());
 			LOGGER.error("ERROR METODO :" + "ultimosArchivosGenerados");
 			LOGGER.error("ERROR MENSAJE :" + e.getMessage());
-			LOGGER.error("ERROR DESCRIPCIÓN :", e);
+			LOGGER.error("ERROR DESCRIPCIÃ“N :", e);
 
 			FaultBeanServiceInfo missing = new FaultBeanServiceInfo();
 			missing.setFaultstring(CtrlResponseWSEnum.WS_ERROR.getMsgRet() + ", ultimosArchivosGenerados");
@@ -587,7 +592,7 @@ public class DomiciliacionesSoapServiceImpl implements IDomiciliacionesSoapServi
 						CtrlResponseWSEnum.WS_INPUT_ERROR.getMsgRet(), "Request, es necesario para el servicio.");
 			}
 
-			// Validación de request
+			// ValidaciÃ³n de request
 			if (!(val = request.validarRequestCifras()).isEstatus()) {
 				return new CifrasDomiBeanResponse(CtrlResponseWSEnum.WS_INPUT_ERROR.getCodRet(),
 						CtrlResponseWSEnum.WS_INPUT_ERROR.getMsgRet(), val.getMensaje());
@@ -728,10 +733,10 @@ public class DomiciliacionesSoapServiceImpl implements IDomiciliacionesSoapServi
 			return response;
 
 		} catch (Exception e) {
-			LOGGER.error("ERROR UBICACIÓN    :" + DomiciliacionesSoapServiceImpl.class.getCanonicalName());
+			LOGGER.error("ERROR UBICACIÃ“N    :" + DomiciliacionesSoapServiceImpl.class.getCanonicalName());
 			LOGGER.error("ERROR METODO       :" + "cifrasDomi");
 			LOGGER.error("ERROR MENSAJE      :" + e.getMessage());
-			LOGGER.error("ERROR DESCRIPCIÓN  :", e);
+			LOGGER.error("ERROR DESCRIPCIÃ“N  :", e);
 
 			FaultBeanServiceInfo missing = new FaultBeanServiceInfo();
 			missing.setFaultstring(CtrlResponseWSEnum.WS_ERROR.getMsgRet() + ", cifrasDomi");
@@ -809,10 +814,10 @@ public class DomiciliacionesSoapServiceImpl implements IDomiciliacionesSoapServi
 			}
 
 		} catch (Exception e) {
-			LOGGER.error("ERROR UBICACIÓN    :" + DomiciliacionesSoapServiceImpl.class.getCanonicalName());
+			LOGGER.error("ERROR UBICACIÃ“N    :" + DomiciliacionesSoapServiceImpl.class.getCanonicalName());
 			LOGGER.error("ERROR METODO       :" + "consultarArchivosDomiciliacion");
 			LOGGER.error("ERROR MENSAJE      :" + e.getMessage());
-			LOGGER.error("ERROR DESCRIPCIÓN  :", e);
+			LOGGER.error("ERROR DESCRIPCIÃ“N  :", e);
 
 			FaultBeanServiceInfo missing = new FaultBeanServiceInfo();
 			missing.setFaultstring(CtrlResponseWSEnum.WS_ERROR.getMsgRet() + ", consultarArchivosDomiciliacion");
@@ -875,10 +880,10 @@ public class DomiciliacionesSoapServiceImpl implements IDomiciliacionesSoapServi
 			}
 
 		} catch (Exception e) {
-			LOGGER.error("ERROR UBICACIÓN    :" + DomiciliacionesSoapServiceImpl.class.getCanonicalName());
+			LOGGER.error("ERROR UBICACIÃ“N    :" + DomiciliacionesSoapServiceImpl.class.getCanonicalName());
 			LOGGER.error("ERROR METODO       :" + "consultarArchivosDomiciliacionBitacora");
 			LOGGER.error("ERROR MENSAJE      :" + e.getMessage());
-			LOGGER.error("ERROR DESCRIPCIÓN  :", e);
+			LOGGER.error("ERROR DESCRIPCIÃ“N  :", e);
 
 			FaultBeanServiceInfo missing = new FaultBeanServiceInfo();
 			missing.setFaultstring(
@@ -893,250 +898,297 @@ public class DomiciliacionesSoapServiceImpl implements IDomiciliacionesSoapServi
 		}
 	}
 
-	// ******************* GEN DE ARCHIVOS POR LOTES ******************************
-	@Override
-	public GeneracionArchivosDomiBeanResponse generarArchivosDomi(PeticionesDomiBeanRequest request) {
-		Boolean dummy = Boolean.FALSE;
-		GeneracionArchivosDomiBeanResponse response = null;
-		List<ArchivoDomiVO> valores = null;
-		ValidacionesVO val = null;
-		DomiParameterMapFilter filters = null;
-		List<SolicitudFilter> filtros = null;
-		Date fechaHoy = null;
-		ArchivoDomiciliacionfilter filter = null;
-		String message = null;
-		GeneracionArchivoDomiVO archivoGenerado = null;
-		List<RespGeneracionArchivosDomi> generaciones = null;
-		String respGeneracion = null;
-		String[] error = null;
-		List<GeneracionArchivoDomiVO> resultados = null;
-		Long idArchivoGenerado = null;
-		String pathFile = null;
-		String idTipoCuentaGenerado = null;
-		String idBancoGenerado = null;
-		String idTipoArchivoGenerado = null;
-		String nombreContrato = null;
-		Boolean resouestaFinalizacionArch = null;
+// ******************* GEN DE ARCHIVOS POR LOTES ******************************
+//Modificado para la carta OP-291-PY Christopher 
+@Override
+public GeneracionArchivosDomiBeanResponse generarArchivosDomi(PeticionesDomiBeanRequest request) {
+	
+    //Boolean dummy = Boolean.FALSE;
+    GeneracionArchivosDomiBeanResponse response = null;
+    List<ArchivoDomiVO> valores = null;
+    ValidacionesVO val = null;
+    DomiParameterMapFilter filters = null;
+    List<SolicitudFilter> filtros = null;
+    //Date fechaHoy = null;
+    //ArchivoDomiciliacionfilter filter = null;
+    //GeneracionArchivoDomiVO archivoGenerado = null;
+    List<RespGeneracionArchivosDomi> generaciones = null;
+    //String respGeneracion = null;
+    //String[] error = null;
+    List<GeneracionArchivoDomiVO> resultados = null;
+    //Long idArchivoGenerado = null;
+    //String pathFile = null;
+    //String idTipoCuentaGenerado = null;
+    //String idBancoGenerado = null;
+    //String idTipoArchivoGenerado = null;
+    //String nombreContrato = null;
+    Boolean resouestaFinalizacionArch = null;
+    ExecutorService executorService = null;
+    List<Future<GeneracionResultado>> futures = null;
+    
+    
+    try {
+        final Date fechaHoy = Calendar.getInstance().getTime();
+        final PeticionesDomiBeanRequest finalRequest = request;
+        
+        executorService = Executors.newFixedThreadPool(4);
+        futures = new ArrayList<Future<GeneracionResultado>>();
+        
+        
+        // Validacion reponse nulo
+        if (request == null) {
+            return new GeneracionArchivosDomiBeanResponse(CtrlResponseWSEnum.WS_INPUT_ERROR.getCodRet(),
+                    CtrlResponseWSEnum.WS_INPUT_ERROR.getMsgRet(), "Request, es necesario para el servicio.");
+        }
 
-		try {
-			// Validacion reponse nulo
-			if (request == null) {
-				return new GeneracionArchivosDomiBeanResponse(CtrlResponseWSEnum.WS_INPUT_ERROR.getCodRet(),
-						CtrlResponseWSEnum.WS_INPUT_ERROR.getMsgRet(), "Request, es necesario para el servicio.");
-			}
+        // Validacion de request
+        if (!(val = request.validarRequestArchivosDomi()).isEstatus()) {
+            return new GeneracionArchivosDomiBeanResponse(CtrlResponseWSEnum.WS_INPUT_ERROR.getCodRet(),
+                    CtrlResponseWSEnum.WS_INPUT_ERROR.getMsgRet(), val.getMensaje());
+        }
 
-			// Validacion de request
-			if (!(val = request.validarRequestArchivosDomi()).isEstatus()) {
-				return new GeneracionArchivosDomiBeanResponse(CtrlResponseWSEnum.WS_INPUT_ERROR.getCodRet(),
-						CtrlResponseWSEnum.WS_INPUT_ERROR.getMsgRet(), val.getMensaje());
-			}
+        // Validacion si se encuntra liberado proceso en ambiente
+        if (Integer.parseInt(this.domiciliacionesService.getParametroLiberacion()) <= 0) {
+            return new GeneracionArchivosDomiBeanResponse(CtrlResponseWSEnum.WS_INPUT_ERROR.getCodRet(),
+                    CtrlResponseWSEnum.WS_INPUT_ERROR.getMsgRet(),
+                    (this.domiciliacionesService.getParametroLiberacion().equals("-1")
+                            || this.domiciliacionesService.getParametroLiberacion().equals("-2"))
+                                    ? "No se encuntra el parametro de liberacion"
+                                    : "Parametro de liberacion apagado");
+        }
 
-			// Validacion si se encuntra liberado proceso en ambiente
-			if (Integer.parseInt(this.domiciliacionesService.getParametroLiberacion()) <= 0) {
-				return new GeneracionArchivosDomiBeanResponse(CtrlResponseWSEnum.WS_INPUT_ERROR.getCodRet(),
-						CtrlResponseWSEnum.WS_INPUT_ERROR.getMsgRet(),
-						(this.domiciliacionesService.getParametroLiberacion().equals("-1")
-								|| this.domiciliacionesService.getParametroLiberacion().equals("-2"))
-										? "No se encuntra el parametro de liberacion"
-										: "Parametro de liberacion apagado");
-			}
+        // Inicialización de variables
+        resultados = new ArrayList<GeneracionArchivoDomiVO>();
+        valores = new ArrayList<ArchivoDomiVO>();
+        generaciones = new ArrayList<RespGeneracionArchivosDomi>();
 
-			// Obtener nombre del contrato (Se realiza validacion)
-			//nombreContrato = this.domiciliacionesService.getNombreContrato(request.getIdTipoContrato());
-			nombreContrato = "PGA-961220PB4"; //Modificado para la fase de pruebas
-			if (nombreContrato == null || nombreContrato.equals("-1") || nombreContrato.equals("")) {
+        // Generar archivos para ambos orígenes de aportación ("0" y "845")
+        List<String> origenesAportacion = Arrays.asList("0", "845");
 
-				return new GeneracionArchivosDomiBeanResponse(CtrlResponseWSEnum.WS_INPUT_ERROR.getCodRet(),
-						CtrlResponseWSEnum.WS_INPUT_ERROR.getMsgRet(),
-						"No se ha encontrado descripcion en cat_catalogo del tipo de contrato especificado.");
-			}
+        for (String origenAportacion : origenesAportacion) {
+            filters = this.domiciliacionesService.getDomiParameterMapFilter(
+                    new PeticionesDomiFilter(origenAportacion, request.getFechaInicio(),
+                            request.getFechaFin(), request.getUsuario(), request.getPeticiones()));
 
-			// Inicialización de variables
-			resultados = new ArrayList<GeneracionArchivoDomiVO>();
-			valores = new ArrayList<ArchivoDomiVO>();
-			generaciones = new ArrayList<RespGeneracionArchivosDomi>();
+            filtros = this.domiciliacionesService.getCustomFilter(filters);
 
-			// Request to filter
-			filters = this.domiciliacionesService.getDomiParameterMapFilter(
-					new PeticionesDomiFilter(request.getOrigenAportacion(), request.getFechaInicio(),
-							request.getFechaFin(), request.getUsuario(), request.getPeticiones()));
+            if (filtros != null && !filtros.isEmpty()) {
+                final DomiParameterMapFilter finalFiltersForTask = filters;
 
-			filtros = this.domiciliacionesService.getCustomFilter(filters);
 
-			// Generar archivos
-			if (filtros != null && !filtros.isEmpty()) {
-				fechaHoy = Calendar.getInstance().getTime();
+                for (final SolicitudFilter filtro : filtros) {
+                    // Tarea para cada filtro (Generacion de archivos en paralelo)
+                    Callable<GeneracionResultado> task = new Callable<GeneracionResultado>() {
+                        @Override
+                        
+                        public GeneracionResultado call() throws Exception {
+                            GeneracionArchivoDomiVO archivoGenerado = new GeneracionArchivoDomiVO();
+                            List<ArchivoDomiVO> valoresParciales = new ArrayList<ArchivoDomiVO>();
+                            String idTipoCuentaGenerado = "0";
+                            String idBancoGenerado = "0";
+                            String idTipoArchivoGenerado = "0";
+                            String nombreContrato = "PGA 961220PB4";
+                            String pathFile = null;
+                            
+                            if (filtro.getIdsBancos() != null && !filtro.getIdsBancos().isEmpty()) {
+                                String primerBanco = String.valueOf(filtro.getIdsBancos().get(0));
+                                if ("460".equals(primerBanco)) {
+                                    nombreContrato = "PGA-961220PB4";
+                                }
+                            }
 
-				for (SolicitudFilter filtro : filtros) {
-					archivoGenerado = new GeneracionArchivoDomiVO();
-					idTipoCuentaGenerado = "0";
-					idBancoGenerado = "0";
-					idTipoArchivoGenerado = "0";
+                            try {
+                                ArchivoDomiciliacionfilter filter = new ArchivoDomiciliacionfilter();
+                                filter.setIdOrigenSolicitud(
+                                        (filtro.getOrigenAportacion() != null ? filtro.getOrigenAportacion().getId() : null));
 
-					// Try Catch propoio para tratar resultados
-					try {
-						filter = new ArchivoDomiciliacionfilter();
-						filter.setIdOrigenSolicitud(
-								(filtro.getOrigenAportacion() != null ? filtro.getOrigenAportacion().getId() : null));
+                                List<RespGeneracionArchivosDomi> generaciones = 
+                                    domiciliacionesService.generarArchivoDomiF4MantLotes(filtro, fechaHoy,
+                                        finalFiltersForTask.getIdOrigenDomiciliacion(), null, nombreContrato, filter);
 
-						generaciones = this.domiciliacionesService.generarArchivoDomiF4MantLotes(filtro, fechaHoy,
-								filters.getIdOrigenDomiciliacion(), idArchivoGenerado, nombreContrato, filter);
+                                for (RespGeneracionArchivosDomi gen : generaciones) {
+                                    String respGeneracion = gen.getIdArchivo();
+                                    archivoGenerado.setNombreArchivo(gen.getNombreArchivo());
+                                    
+                                    Long idArchivoGenerado = null;
+                                    if (respGeneracion != null && domiciliacionesService.isNumber(respGeneracion)
+                                            && Long.parseLong(respGeneracion) > 0) {
+                                        idArchivoGenerado = Long.parseLong(respGeneracion);
+                                        archivoGenerado.setGenerated(Boolean.TRUE);
+                                        String message = domiciliacionesService.getFileGeneratedData(gen.getNombreArchivo(),
+                                                filtro) + " - " + "Archivo generado correctamente";
+                                        archivoGenerado.getErrors().add(message);
+                                    } else {
+                                        idArchivoGenerado = Long.parseLong("0");
+                                        archivoGenerado.setGenerated(Boolean.FALSE);
+                                        archivoGenerado.getErrors().add(respGeneracion);
+                                    }
 
-						// Se traen las generaciones (posibles lotes)
-						for (RespGeneracionArchivosDomi gen : generaciones) {
-							archivoGenerado = new GeneracionArchivoDomiVO();
-							idTipoCuentaGenerado = "0";
-							idBancoGenerado = "0";
-							idTipoArchivoGenerado = "0";
-							respGeneracion = gen.getIdArchivo();
+                                    // Determinar pathFile
+                                    if (ID_BANCOMER_NCI.equals(filtro.getIdTipoArchivo())) {
+                                        pathFile = PATH_ACHIVO_DOMI_BANCOMER;
+                                    }
 
-							archivoGenerado.setNombreArchivo(gen.getNombreArchivo());
-							if (respGeneracion != null && this.domiciliacionesService.isNumber(respGeneracion)
-									&& Long.parseLong(respGeneracion) > 0) {
+                                    // Determinar tipo de cuenta
+                                    if (filtro.getIdsTiposCuenta() != null) {
+                                        idTipoCuentaGenerado = (filtro.getIdsTiposCuenta().size() > 1) ? "0"
+                                                : String.valueOf(filtro.getIdsTiposCuenta().get(0));
+                                    }
 
-								idArchivoGenerado = Long.parseLong(respGeneracion);
-								archivoGenerado.setGenerated(Boolean.TRUE);
+                                    // Determinar banco
+                                    if (filtro.getIdsBancos() != null && !filtro.getIdsBancos().isEmpty()) {
+                                        idBancoGenerado = String.valueOf(filtro.getIdsBancos().get(0));
+                                    } else {
+                                        idBancoGenerado = "848";
+                                    }
 
-								message = this.domiciliacionesService.getFileGeneratedData(gen.getNombreArchivo(),
-										filtro) + " - " + "Archivo generado correctamente";
-								archivoGenerado.getErrors().add(message);
-							} else {
-								idArchivoGenerado = Long.parseLong("0");
-								archivoGenerado.setGenerated(Boolean.FALSE);
-								archivoGenerado.getErrors().add(respGeneracion);
-							}
+                                    // Determinar tipo de archivo
+                                    idTipoArchivoGenerado = (filtro.getArchivoUnico()) ? "1" : "2";
 
-							// Se agrega resultado (independientemente si se generó o no) a la lista
-							// original
-							resultados.add(archivoGenerado);
+                                    // Registrar en bitácora
+                                    domiciliacionesService.registrarArchivoDomiBitacora(new OperacionDomiBitacoraFilter(
+                                            finalRequest.getFolio(), idArchivoGenerado, Long.parseLong(finalRequest.getIdTipoContrato()),
+                                            Long.parseLong((archivoGenerado.getGenerated()) ? "1" : "0"),
+                                            Long.parseLong(idTipoArchivoGenerado), Long.parseLong(idBancoGenerado),
+                                            Long.parseLong(String.valueOf(filtro.getIdTipoArchivo())),
+                                            Long.parseLong(idTipoCuentaGenerado),
+                                            (archivoGenerado.getNombreArchivo() == null
+                                                    || archivoGenerado.getNombreArchivo().length() == 0) ? "SIN NOMBRE"
+                                                            : archivoGenerado.getNombreArchivo(),
+                                            (archivoGenerado.getErrors() != null && !archivoGenerado.getErrors().isEmpty())
+                                                    ? archivoGenerado.getErrors().get(0)
+                                                    : "",
+                                            pathFile, (archivoGenerado.getGenerated()) ? 1 : 0, finalRequest.getUsuario()));
 
-							// Se anexa ruta -Modificado para clave OP-291-PY
-							/* C�digo original comentado:
-							if (ID_BANAMEX_NCI.equals(filtro.getIdTipoArchivo())) {
-							    pathFile = PATH_ACHIVO_DOMI_BANAMEX;
-							} else if (ID_BANCOMER_NCI.equals(filtro.getIdTipoArchivo())) {
-							    pathFile = PATH_ACHIVO_DOMI_BANCOMER;
-							}
-							*/
-							if (ID_BANCOMER_NCI.equals(filtro.getIdTipoArchivo())) {
-							    pathFile = PATH_ACHIVO_DOMI_BANCOMER;
-							    }
-							// Se determina el tipo de cuenta
-							if (filtro.getIdsTiposCuenta() != null) {
-								idTipoCuentaGenerado = (filtro.getIdsTiposCuenta().size() > 1) ? "0"
-										: String.valueOf(filtro.getIdsTiposCuenta().get(0));
-							} else {
-								idTipoCuentaGenerado = "0";
-							}
+                                    // Agregar a valores parciales
+                                    valoresParciales.add(new ArchivoDomiVO(null, null, null, archivoGenerado.getNombreArchivo(),
+                                            finalRequest.getUsuario(), String.valueOf(idArchivoGenerado),
+                                            archivoGenerado.getGenerated(),
+                                            (archivoGenerado.getErrors() != null && !archivoGenerado.getErrors().isEmpty())
+                                                    ? archivoGenerado.getErrors().get(0)
+                                                    : "",
+                                            pathFile));
+                                }
+                            } catch (Exception e) {
+                                archivoGenerado.setGenerated(Boolean.FALSE);
+                                String[] error = e.getMessage().split(":");
+                                archivoGenerado.getErrors().add(error[0]);
+                            }
+                            
+                            return new GeneracionResultado(archivoGenerado, valoresParciales);
+                        }
+                    };
+                    
+                    // Enviar tarea al executor
+                    futures.add(executorService.submit(task));
+                }
+            }
+        }
+        
+        // Esperar a que todas las tareas terminen y recolectar resultados
+        for (Future<GeneracionResultado> future : futures) {
+            try {
+                GeneracionResultado resultado = future.get();
+                resultados.add(resultado.getArchivoGenerado());
+                valores.addAll(resultado.getValoresParciales());
+            } catch (Exception e) {
+                LOGGER.error("Error procesando tarea paralela", e);
+            }
+        }
+        
+        
+        // Se respode a BUS si terminó la ejecución (en caso de aplicar)
+        resouestaFinalizacionArch = this.domiciliacionesService.responderFinalizacionArchivosDomi(request.getFolio());
+        
+        if (!resouestaFinalizacionArch) {
+            response = new GeneracionArchivosDomiBeanResponse(CtrlResponseWSEnum.WS_ERROR.getCodRet(),
+                    CtrlResponseWSEnum.WS_ERROR.getMsgRet(),
+                    "Error al responder la finalización de archivos a BUS");
+        }
 
-							// Se determina el banco ("Ctas a incluir")
-							if (filtro.getIdsBancos() != null && !filtro.getIdsBancos().isEmpty()) {
-								idBancoGenerado = String.valueOf(filtro.getIdsBancos().get(0));
-							} else {
-								idBancoGenerado = "848";
-							}
+        // Formalización del response
+        if (valores != null && !valores.isEmpty()) {
+            response = new GeneracionArchivosDomiBeanResponse(CtrlResponseWSEnum.WS_OK.getCodRet(),
+                    CtrlResponseWSEnum.WS_OK.getMsgRet(),
+                    "Generacion de archivos correcta (archivos generados explicitos en lista)", valores,
+                    request.getFolio());
+        } else {
+            response = new GeneracionArchivosDomiBeanResponse(CtrlResponseWSEnum.WS_NO_RECORD.getCodRet(),
+                    CtrlResponseWSEnum.WS_NO_RECORD.getMsgRet(), "Sin archivos generados");
+        }
 
-							// Se determina tipo de archivo (unico o individual)
-							idTipoArchivoGenerado = (filtro.getArchivoUnico()) ? "1" : "2";
+        // Mandar a log resultados para posible rastreabilidad de operaciones
+        LOGGER.info("*********** ARCHIVOS DOMI GENERADOS: " + new Gson().toJson(resultados));
 
-							// Se registra en tabla relacion folio-archivo(s)
-							this.domiciliacionesService.registrarArchivoDomiBitacora(new OperacionDomiBitacoraFilter(
-									request.getFolio(), idArchivoGenerado, Long.parseLong(request.getIdTipoContrato()),
-									Long.parseLong((archivoGenerado.getGenerated()) ? "1" : "0"),
-									Long.parseLong(idTipoArchivoGenerado), Long.parseLong(idBancoGenerado),
-									Long.parseLong(String.valueOf(filtro.getIdTipoArchivo())),
-									Long.parseLong(idTipoCuentaGenerado),
-									(archivoGenerado.getNombreArchivo() == null
-											|| archivoGenerado.getNombreArchivo().length() == 0) ? "SIN NOMBRE"
-													: archivoGenerado.getNombreArchivo(),
-									(archivoGenerado.getErrors() != null && !archivoGenerado.getErrors().isEmpty())
-											? archivoGenerado.getErrors().get(0)
-											: "",
-									pathFile, (archivoGenerado.getGenerated()) ? 1 : 0, request.getUsuario()));
+        return response;
+    } catch (Exception e) {
+        LOGGER.error("ERROR UBICACIÓN    :" + DomiciliacionesSoapServiceImpl.class.getCanonicalName());
+        LOGGER.error("ERROR METODO       :" + "generarArchivosDomiLotes");
+        LOGGER.error("ERROR MENSAJE      :" + e.getMessage());
+        LOGGER.error("ERROR DESCRIPCIÓN  :", e);
+        FaultBeanServiceInfo missing = new FaultBeanServiceInfo();
+        missing.setFaultstring(CtrlResponseWSEnum.WS_ERROR.getMsgRet() + ", generarArchivosDomiLotes");
+        throw new MitWebServiceException(e.getMessage(), missing);
+    } finally {
+    	if (executorService != null) {
+            executorService.shutdown();
+            try {
+                if (!executorService.awaitTermination(Long.MAX_VALUE, TimeUnit.NANOSECONDS)) {
+                    executorService.shutdownNow();
+                }
+            } catch (InterruptedException e) {
+                executorService.shutdownNow();
+                Thread.currentThread().interrupt();
+            }
+        }
+        //dummy = null;
+        response = null;
+        valores = null;
+        val = null;
+        filters = null;
+        filtros = null;
+        //fechaHoy = null;
+        //filter = null;
+        //message = null;
+        //archivoGenerado = null;
+        //respGeneracion = null;
+        //error = null;
+        resultados = null;
+        //idArchivoGenerado = null;
+        //pathFile = null;
+        //idTipoCuentaGenerado = null;
+        //idBancoGenerado = null;
+        //idTipoArchivoGenerado = null;
+        //nombreContrato = null;
+        generaciones = null;
+        resouestaFinalizacionArch = null;
+        executorService = null;
+        futures = null;
+    }
+}
 
-							// Se agrega resultado
-							valores.add(new ArchivoDomiVO(null, null, null, archivoGenerado.getNombreArchivo(),
-									request.getUsuario(), String.valueOf(idArchivoGenerado),
-									archivoGenerado.getGenerated(),
-									(archivoGenerado.getErrors() != null && !archivoGenerado.getErrors().isEmpty())
-											? archivoGenerado.getErrors().get(0)
-											: "",
-									pathFile));
-
-						}
-
-					} catch (Exception e) {
-						archivoGenerado.setGenerated(Boolean.FALSE);
-						error = e.getMessage().split(":");
-						archivoGenerado.getErrors().add(error[0]);
-					}
-
-				}
-				
-				// Se respode a BUS si terminó la ejecución (en caso de aplicar)
-				resouestaFinalizacionArch = this.domiciliacionesService.responderFinalizacionArchivosDomi(request.getFolio());
-				
-				if (!resouestaFinalizacionArch) {
-					response = new GeneracionArchivosDomiBeanResponse( CtrlResponseWSEnum.WS_ERROR.getCodRet()
-																	 , CtrlResponseWSEnum.WS_ERROR.getMsgRet(),
-																	  "Errro al responder la finalización de archivos a BUS");
-				}
-
-				// Formalización del response
-				if (valores != null && !valores.isEmpty()) {
-					response = new GeneracionArchivosDomiBeanResponse(CtrlResponseWSEnum.WS_OK.getCodRet(),
-							CtrlResponseWSEnum.WS_OK.getMsgRet(),
-							"Generacion de archivos correcta (archivos generados explicitos en lista)", valores,
-							request.getFolio());
-				} else {
-					response = new GeneracionArchivosDomiBeanResponse(CtrlResponseWSEnum.WS_NO_RECORD.getCodRet(),
-							CtrlResponseWSEnum.WS_NO_RECORD.getMsgRet(), "Sin archivos generados");
-				}
-
-			} else {
-				response = new GeneracionArchivosDomiBeanResponse(CtrlResponseWSEnum.WS_NO_RECORD.getCodRet(),
-						CtrlResponseWSEnum.WS_NO_RECORD.getMsgRet(),
-						"Sin resultados para generar archivos de domiciliacion con base en parametros de entrada");
-			}
-
-			// Mandar a log resultados para posible rastreabilidad de operaciones
-			LOGGER.info("*********** ARCHIVOS DOMI GENERADOS: " + new Gson().toJson(resultados));
-
-			return response;
-		} catch (Exception e) {
-			LOGGER.error("ERROR UBICACIÓN    :" + DomiciliacionesSoapServiceImpl.class.getCanonicalName());
-			LOGGER.error("ERROR METODO       :" + "generarArchivosDomiLotes");
-			LOGGER.error("ERROR MENSAJE      :" + e.getMessage());
-			LOGGER.error("ERROR DESCRIPCIÓN  :", e);
-			FaultBeanServiceInfo missing = new FaultBeanServiceInfo();
-			missing.setFaultstring(CtrlResponseWSEnum.WS_ERROR.getMsgRet() + ", generarArchivosDomiLotes");
-			throw new MitWebServiceException(e.getMessage(), missing);
-		} finally {
-			dummy = null;
-			response = null;
-			valores = null;
-			val = null;
-			filters = null;
-			filtros = null;
-			fechaHoy = null;
-			filter = null;
-			message = null;
-			archivoGenerado = null;
-			respGeneracion = null;
-			error = null;
-			resultados = null;
-			idArchivoGenerado = null;
-			pathFile = null;
-			idTipoCuentaGenerado = null;
-			idBancoGenerado = null;
-			idTipoArchivoGenerado = null;
-			nombreContrato = null;
-			generaciones = null;
-			resouestaFinalizacionArch = null;
-		}
-	}
-
+private static class GeneracionResultado {
+    private final GeneracionArchivoDomiVO archivoGenerado;
+    private final List<ArchivoDomiVO> valoresParciales;
+    
+    public GeneracionResultado(GeneracionArchivoDomiVO archivoGenerado, List<ArchivoDomiVO> valoresParciales) {
+        this.archivoGenerado = archivoGenerado;
+        this.valoresParciales = valoresParciales;
+    }
+    
+    public GeneracionArchivoDomiVO getArchivoGenerado() {
+        return archivoGenerado;
+    }
+    
+    public List<ArchivoDomiVO> getValoresParciales() {
+        return valoresParciales;
+    }
+}
+	
 	/**
+
+
+
 	 * Metodo que retorna renglones de una tabla dinamica Ejemplo de estructura a
 	 * crear:
 	 * <tr>
@@ -1201,10 +1253,10 @@ public class DomiciliacionesSoapServiceImpl implements IDomiciliacionesSoapServi
 			}
 
 		} catch (Exception e) {
-			LOGGER.error("ERROR UBICACIÓN    :" + DomiciliacionesSoapServiceImpl.class.getCanonicalName());
+			LOGGER.error("ERROR UBICACIÃ“N    :" + DomiciliacionesSoapServiceImpl.class.getCanonicalName());
 			LOGGER.error("ERROR METODO       :" + "generarTablaDinamicaArchDomi");
 			LOGGER.error("ERROR MENSAJE      :" + e.getMessage());
-			LOGGER.error("ERROR DESCRIPCIÓN  :", e);
+			LOGGER.error("ERROR DESCRIPCIÃ“N  :", e);
 			FaultBeanServiceInfo missing = new FaultBeanServiceInfo();
 			missing.setFaultstring(CtrlResponseWSEnum.WS_ERROR.getMsgRet() + ", generarTablaDinamicaArchDomi");
 			throw new MitWebServiceException(e.getMessage(), missing);
@@ -1270,10 +1322,10 @@ public class DomiciliacionesSoapServiceImpl implements IDomiciliacionesSoapServi
 				}
 			}
 		} catch (Exception e) {
-			LOGGER.error("ERROR UBICACIÓN    :" + DomiciliacionesSoapServiceImpl.class.getCanonicalName());
+			LOGGER.error("ERROR UBICACIÃ“N    :" + DomiciliacionesSoapServiceImpl.class.getCanonicalName());
 			LOGGER.error("ERROR METODO       :" + "actValorProcesamientoDomi");
 			LOGGER.error("ERROR MENSAJE      :" + e.getMessage());
-			LOGGER.error("ERROR DESCRIPCIÓN  :", e);
+			LOGGER.error("ERROR DESCRIPCIÃ“N  :", e);
 			FaultBeanServiceInfo missing = new FaultBeanServiceInfo();
 			missing.setFaultstring(CtrlResponseWSEnum.WS_ERROR.getMsgRet() + ", actValorProcesamientoDomi");
 			throw new MitWebServiceException(e.getMessage(), missing);
@@ -1330,10 +1382,10 @@ public class DomiciliacionesSoapServiceImpl implements IDomiciliacionesSoapServi
 			}
 
 		} catch (Exception e) {
-			LOGGER.error("ERROR UBICACIÓN    :" + DomiciliacionesSoapServiceImpl.class.getCanonicalName());
+			LOGGER.error("ERROR UBICACIÃ“N    :" + DomiciliacionesSoapServiceImpl.class.getCanonicalName());
 			LOGGER.error("ERROR METODO       :" + "consultarRegistrosArchivo");
 			LOGGER.error("ERROR MENSAJE      :" + e.getMessage());
-			LOGGER.error("ERROR DESCRIPCIÓN  :", e);
+			LOGGER.error("ERROR DESCRIPCIÃ“N  :", e);
 
 			FaultBeanServiceInfo missing = new FaultBeanServiceInfo();
 			missing.setFaultstring(CtrlResponseWSEnum.WS_ERROR.getMsgRet() + ", consultarRegistrosArchivo");

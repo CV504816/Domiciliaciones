@@ -47,3 +47,6 @@ Desktop.ini
 *.swp
 /.metadata/
 /.sonarlint/
+*.TXT
+ARCHIVOS/
+prueba correcta/
