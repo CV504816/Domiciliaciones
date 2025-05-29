@@ -137,12 +137,6 @@
 					</foreach>
 			    </if>         		
 			    AND SOL.FTD_FEH_PROX_CARGO BETWEEN TO_DATE( #{fechaInicio},'DD/MM/YYYY') AND TO_DATE(#{fechaFin},'DD/MM/YYYY')
-			    <if test='origenAportacion.equals("845")'>
-			    	AND SOL.FTN_ORIGEN_APORTACION = #{origenAportacion}        -- ==>  845 DOMICILIACIONES TRASPASOS ,0 DOMICILIACIONES
-			    </if>
-			    <if test='origenAportacion.equals("0")'>
-			    	AND SOL.FTN_ORIGEN_APORTACION <![CDATA[ <> ]]> 845        -- ==>  845 DOMICILIACIONES TRASPASOS ,0 DOMICILIACIONES
-			    </if>
 			    AND SOL.FTN_ID_ORIGEN_SOLICITUD <![CDATA[ <> ]]> 1042
 			    AND SOL.FTN_ESTATUS_CARGO IN ( 498 )
 			    GROUP BY SOL.FTN_ID_PERIODO
@@ -170,12 +164,6 @@
 					</foreach>
 			    </if>
 			    AND SOL.FTD_FEH_PROX_CARGO BETWEEN TO_DATE( #{fechaInicio},'DD/MM/YYYY') AND TO_DATE( #{fechaFin},'DD/MM/YYYY')
-			    <if test='origenAportacion.equals("845")'>
-			    	AND SOL.FTN_ORIGEN_APORTACION = #{origenAportacion}        -- ==>  845 DOMICILIACIONES TRASPASOS ,0 DOMICILIACIONES
-			    </if>
-			    <if test='origenAportacion.equals("0")'>
-			    	AND SOL.FTN_ORIGEN_APORTACION <![CDATA[ <> ]]> 845        -- ==>  845 DOMICILIACIONES TRASPASOS ,0 DOMICILIACIONES
-			    </if>
 			    AND SOL.FTN_ID_ORIGEN_SOLICITUD <![CDATA[ <> ]]> 1042
 			    AND SOL.FTN_ESTATUS_CARGO IN ( 498 )
 			)
@@ -202,12 +190,6 @@
 					</foreach>
 			    </if>
 			    AND SOL.FTD_FEH_PROX_CARGO BETWEEN TO_DATE(#{fechaInicio},'DD/MM/YYYY') AND TO_DATE(#{fechaFin},'DD/MM/YYYY')
-			    <if test='origenAportacion.equals("845")'>
-			    	AND SOL.FTN_ORIGEN_APORTACION = #{origenAportacion}        -- ==>  845 DOMICILIACIONES TRASPASOS ,0 DOMICILIACIONES
-			    </if>
-			    <if test='origenAportacion.equals("0")'>
-			    	AND SOL.FTN_ORIGEN_APORTACION <![CDATA[ <> ]]> 845        -- ==>  845 DOMICILIACIONES TRASPASOS ,0 DOMICILIACIONES
-			    </if>
 			    AND SOL.FTN_ID_ORIGEN_SOLICITUD <![CDATA[ <> ]]> 1042
 			    AND SOL.FTN_ESTATUS_CARGO IN ( 498 )
 			))
@@ -244,14 +226,8 @@
 					</foreach>
 			    </if>				
 			    AND 
-			    SOL.FTN_CVE_BANCO NOT IN (459, 460)         		
+			    SOL.FTN_CVE_BANCO NOT IN (460)         		
 			    AND SOL.FTD_FEH_PROX_CARGO BETWEEN TO_DATE( #{fechaInicio},'DD/MM/YYYY') AND TO_DATE(#{fechaFin},'DD/MM/YYYY')
-			    <if test='origenAportacion.equals("845")'>
-			    	AND SOL.FTN_ORIGEN_APORTACION = #{origenAportacion}        -- ==>  845 DOMICILIACIONES TRASPASOS ,0 DOMICILIACIONES
-			    </if>
-			    <if test='origenAportacion.equals("0")'>
-			    	AND SOL.FTN_ORIGEN_APORTACION <![CDATA[ <> ]]> 845        -- ==>  845 DOMICILIACIONES TRASPASOS ,0 DOMICILIACIONES
-			    </if>
 			    AND SOL.FTN_ID_ORIGEN_SOLICITUD <![CDATA[ <> ]]> 1042
 			    AND SOL.FTN_ESTATUS_CARGO IN ( 498 )
 			    GROUP BY SOL.FTN_ID_PERIODO
@@ -275,14 +251,8 @@
 					</foreach>
 			    </if>				
 			    AND 
-			    SOL.FTN_CVE_BANCO NOT IN (459, 460) 
+			    SOL.FTN_CVE_BANCO NOT IN (460) 
 			    AND SOL.FTD_FEH_PROX_CARGO BETWEEN TO_DATE( #{fechaInicio},'DD/MM/YYYY') AND TO_DATE( #{fechaFin},'DD/MM/YYYY')
-			    <if test='origenAportacion.equals("845")'>
-			    	AND SOL.FTN_ORIGEN_APORTACION = #{origenAportacion}        -- ==>  845 DOMICILIACIONES TRASPASOS ,0 DOMICILIACIONES
-			    </if>
-			    <if test='origenAportacion.equals("0")'>
-			    	AND SOL.FTN_ORIGEN_APORTACION <![CDATA[ <> ]]> 845        -- ==>  845 DOMICILIACIONES TRASPASOS ,0 DOMICILIACIONES
-			    </if>
 			    AND SOL.FTN_ID_ORIGEN_SOLICITUD <![CDATA[ <> ]]> 1042
 			    AND SOL.FTN_ESTATUS_CARGO IN ( 498 )
 			)
@@ -305,14 +275,8 @@
 					</foreach>
 			    </if>				
 			    AND 
-			    SOL.FTN_CVE_BANCO NOT IN (459, 460) 
+			    SOL.FTN_CVE_BANCO NOT IN (460) 
 			    AND SOL.FTD_FEH_PROX_CARGO BETWEEN TO_DATE(#{fechaInicio},'DD/MM/YYYY') AND TO_DATE(#{fechaFin},'DD/MM/YYYY')
-			    <if test='origenAportacion.equals("845")'>
-			    	AND SOL.FTN_ORIGEN_APORTACION = #{origenAportacion}        -- ==>  845 DOMICILIACIONES TRASPASOS ,0 DOMICILIACIONES
-			    </if>
-			    <if test='origenAportacion.equals("0")'>
-			    	AND SOL.FTN_ORIGEN_APORTACION <![CDATA[ <> ]]> 845        -- ==>  845 DOMICILIACIONES TRASPASOS ,0 DOMICILIACIONES
-			    </if>
 			    AND SOL.FTN_ID_ORIGEN_SOLICITUD <![CDATA[ <> ]]> 1042
 			    AND SOL.FTN_ESTATUS_CARGO IN ( 498 )
 			))
