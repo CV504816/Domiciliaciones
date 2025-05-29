@@ -648,7 +648,7 @@ public class DomiciliacionesServiceImpl implements IDomiciliacionesService{
 					dfbPar.setStream(swPar.getBuffer().toString().getBytes());
 					boolean enviadoPar = fileTransferService.sendFile(dfbPar);
 					if(enviadoPar) {
-						this.updateEstatusSolicitud(domis,solicitudFilter.getUsuarioCreacion());
+						//this.updateEstatusSolicitud(domis,solicitudFilter.getUsuarioCreacion());
 						this.updateEstatusArchivoGeneradoPar(idArchivo, ID_ESTATUS_ARCHIVO_DOMI_GENERADO,solicitudFilter.getUsuarioCreacion());
 					} else {
 						return "El archivo no pudo escribirse en la ruta";
@@ -717,6 +717,7 @@ public class DomiciliacionesServiceImpl implements IDomiciliacionesService{
 		String idBancoGenerado													= null;
 		Boolean actualizarSolicitudes											= null;
 		try {
+			
 			archivo = "";
 			arrArchivosGenerados = new ArrayList <RespGeneracionArchivosDomi> ();
 
@@ -790,6 +791,8 @@ public class DomiciliacionesServiceImpl implements IDomiciliacionesService{
 	        */
 
 			if(ID_BANCOMER_NCI.equals( solicitudFilter.getIdTipoArchivo()) ) {
+
+
 				if ( contrato.equals("PGA-961220PB4") ) {
 
 					if (idBancoGenerado.equals("460")) { // Lotes
@@ -848,7 +851,7 @@ public class DomiciliacionesServiceImpl implements IDomiciliacionesService{
 						
 						// Se actuaizan los estatus
 						if (actualizarSolicitudes) {
-							this.updateEstatusSolicitud(domis,solicitudFilter.getUsuarioCreacion());
+							//this.updateEstatusSolicitud(domis,solicitudFilter.getUsuarioCreacion());
 							this.updateEstatusArchivoGeneradoPar(idArchivo, ID_ESTATUS_ARCHIVO_DOMI_GENERADO,solicitudFilter.getUsuarioCreacion());
 						}
 						
@@ -889,7 +892,7 @@ public class DomiciliacionesServiceImpl implements IDomiciliacionesService{
 							dfbPar.setStream(swPar.getBuffer().toString().getBytes());
 							boolean enviadoPar = fileTransferService.sendFile(dfbPar);
 							if(enviadoPar) {
-								this.updateEstatusSolicitud(domis,solicitudFilter.getUsuarioCreacion());
+								//this.updateEstatusSolicitud(domis,solicitudFilter.getUsuarioCreacion());
 								this.updateEstatusArchivoGeneradoPar(idArchivo, ID_ESTATUS_ARCHIVO_DOMI_GENERADO,solicitudFilter.getUsuarioCreacion());
 								arrArchivosGenerados.add(new RespGeneracionArchivosDomi (String.valueOf(idArchivo), archivo) );
 							} else {
@@ -956,7 +959,7 @@ public class DomiciliacionesServiceImpl implements IDomiciliacionesService{
 						
 						// Se actuaizan los estatus
 						if (actualizarSolicitudes) {
-							this.updateEstatusSolicitud(domis,solicitudFilter.getUsuarioCreacion());
+							//this.updateEstatusSolicitud(domis,solicitudFilter.getUsuarioCreacion());
 							this.updateEstatusArchivoGeneradoPar(idArchivo, ID_ESTATUS_ARCHIVO_DOMI_GENERADO,solicitudFilter.getUsuarioCreacion());
 						}
 						
@@ -996,7 +999,7 @@ public class DomiciliacionesServiceImpl implements IDomiciliacionesService{
 							dfbPar.setStream(swPar.getBuffer().toString().getBytes());
 							boolean enviadoPar = fileTransferService.sendFile(dfbPar);
 							if(enviadoPar) {
-								this.updateEstatusSolicitud(domis,solicitudFilter.getUsuarioCreacion());
+								//this.updateEstatusSolicitud(domis,solicitudFilter.getUsuarioCreacion());
 								this.updateEstatusArchivoGeneradoPar(idArchivo, ID_ESTATUS_ARCHIVO_DOMI_GENERADO,solicitudFilter.getUsuarioCreacion());
 								arrArchivosGenerados.add(new RespGeneracionArchivosDomi (String.valueOf(idArchivo), archivo) );
 							} else {
@@ -1007,7 +1010,6 @@ public class DomiciliacionesServiceImpl implements IDomiciliacionesService{
 					
 				} 
 			}
-			
 			
 			return arrArchivosGenerados;
 		} catch (Exception e) {
@@ -1746,7 +1748,7 @@ public class DomiciliacionesServiceImpl implements IDomiciliacionesService{
 			record 				= null;
 		}
 	}
-	
+/*	
 	@Transactional(rollbackFor = MitBusinessException.class, propagation = Propagation.REQUIRED)
 	private void updateEstatusSolicitud(List<SolicitudVO> domis, String usuario) throws MitBusinessException {
 		String currentSolicitud			= null;
@@ -1783,7 +1785,7 @@ public class DomiciliacionesServiceImpl implements IDomiciliacionesService{
 			solicitudEstatus 	= null;
 		}
 	}
-	
+	*/
 	@Transactional(rollbackFor = MitBusinessException.class, propagation = Propagation.REQUIRED)
 	private Integer updateEstatusArchivoGeneradoPar(Long idArchivo, Short idEstatus,String usuario) throws MitBusinessException{
 		Integer updated = 0;

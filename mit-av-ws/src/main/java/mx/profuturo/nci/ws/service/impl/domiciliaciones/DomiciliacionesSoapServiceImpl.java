@@ -324,7 +324,6 @@ public class DomiciliacionesSoapServiceImpl implements IDomiciliacionesSoapServi
 				filters = this.domiciliacionesService.getDomiParameterMapFilter(
 						new PeticionesDomiFilter(request.getOrigenAportacion(), request.getFechaInicio(),
 								request.getFechaFin(), request.getUsuario(), request.getPeticiones()));
-				System.out.println("AQUI YA PASO");
 				filtros = this.domiciliacionesService.getCustomFilter(filters);
 
 				// Generar archivos
@@ -764,6 +763,7 @@ public class DomiciliacionesSoapServiceImpl implements IDomiciliacionesSoapServi
 
 	}
 
+	
 	/**
 	 * Metodo que consulta el Business para obtener la informacion.
 	 * 
@@ -898,43 +898,32 @@ public class DomiciliacionesSoapServiceImpl implements IDomiciliacionesSoapServi
 		}
 	}
 
-// ******************* GEN DE ARCHIVOS POR LOTES ******************************
-//Modificado para la carta OP-291-PY Christopher 
+	// ******************* GEN DE ARCHIVOS POR LOTES ******************************
 @Override
 public GeneracionArchivosDomiBeanResponse generarArchivosDomi(PeticionesDomiBeanRequest request) {
-	
-    //Boolean dummy = Boolean.FALSE;
+    Boolean dummy = Boolean.FALSE;
     GeneracionArchivosDomiBeanResponse response = null;
     List<ArchivoDomiVO> valores = null;
     ValidacionesVO val = null;
     DomiParameterMapFilter filters = null;
     List<SolicitudFilter> filtros = null;
-    //Date fechaHoy = null;
-    //ArchivoDomiciliacionfilter filter = null;
-    //GeneracionArchivoDomiVO archivoGenerado = null;
+    Date fechaHoy = null;
+    ArchivoDomiciliacionfilter filter = null;
+    String message = null;
+    GeneracionArchivoDomiVO archivoGenerado = null;
     List<RespGeneracionArchivosDomi> generaciones = null;
-    //String respGeneracion = null;
-    //String[] error = null;
+    String respGeneracion = null;
+    String[] error = null;
     List<GeneracionArchivoDomiVO> resultados = null;
-    //Long idArchivoGenerado = null;
-    //String pathFile = null;
-    //String idTipoCuentaGenerado = null;
-    //String idBancoGenerado = null;
-    //String idTipoArchivoGenerado = null;
-    //String nombreContrato = null;
+    Long idArchivoGenerado = null;
+    String pathFile = null;
+    String idTipoCuentaGenerado = null;
+    String idBancoGenerado = null;
+    String idTipoArchivoGenerado = null;
+    String nombreContrato = null;
     Boolean resouestaFinalizacionArch = null;
-    ExecutorService executorService = null;
-    List<Future<GeneracionResultado>> futures = null;
-    
-    
+
     try {
-        final Date fechaHoy = Calendar.getInstance().getTime();
-        final PeticionesDomiBeanRequest finalRequest = request;
-        
-        executorService = Executors.newFixedThreadPool(4);
-        futures = new ArrayList<Future<GeneracionResultado>>();
-        
-        
         // Validacion reponse nulo
         if (request == null) {
             return new GeneracionArchivosDomiBeanResponse(CtrlResponseWSEnum.WS_INPUT_ERROR.getCodRet(),
@@ -962,148 +951,137 @@ public GeneracionArchivosDomiBeanResponse generarArchivosDomi(PeticionesDomiBean
         valores = new ArrayList<ArchivoDomiVO>();
         generaciones = new ArrayList<RespGeneracionArchivosDomi>();
 
-        // Generar archivos para ambos orígenes de aportación ("0" y "845")
+        // Lista de orígenes de aportación a procesar (0 y 845)
         List<String> origenesAportacion = Arrays.asList("0", "845");
 
         for (String origenAportacion : origenesAportacion) {
+            // Request to filter con el origen de aportación actual
             filters = this.domiciliacionesService.getDomiParameterMapFilter(
                     new PeticionesDomiFilter(origenAportacion, request.getFechaInicio(),
                             request.getFechaFin(), request.getUsuario(), request.getPeticiones()));
 
             filtros = this.domiciliacionesService.getCustomFilter(filters);
 
+            // Generar archivos
             if (filtros != null && !filtros.isEmpty()) {
-                final DomiParameterMapFilter finalFiltersForTask = filters;
+                fechaHoy = Calendar.getInstance().getTime();
 
-
-                for (final SolicitudFilter filtro : filtros) {
-                    // Tarea para cada filtro (Generacion de archivos en paralelo)
-                    Callable<GeneracionResultado> task = new Callable<GeneracionResultado>() {
-                        @Override
-                        
-                        public GeneracionResultado call() throws Exception {
-                            GeneracionArchivoDomiVO archivoGenerado = new GeneracionArchivoDomiVO();
-                            List<ArchivoDomiVO> valoresParciales = new ArrayList<ArchivoDomiVO>();
-                            String idTipoCuentaGenerado = "0";
-                            String idBancoGenerado = "0";
-                            String idTipoArchivoGenerado = "0";
-                            String nombreContrato = "PGA 961220PB4";
-                            String pathFile = null;
-                            
-                            if (filtro.getIdsBancos() != null && !filtro.getIdsBancos().isEmpty()) {
-                                String primerBanco = String.valueOf(filtro.getIdsBancos().get(0));
-                                if ("460".equals(primerBanco)) {
-                                    nombreContrato = "PGA-961220PB4";
-                                }
-                            }
-
-                            try {
-                                ArchivoDomiciliacionfilter filter = new ArchivoDomiciliacionfilter();
-                                filter.setIdOrigenSolicitud(
-                                        (filtro.getOrigenAportacion() != null ? filtro.getOrigenAportacion().getId() : null));
-
-                                List<RespGeneracionArchivosDomi> generaciones = 
-                                    domiciliacionesService.generarArchivoDomiF4MantLotes(filtro, fechaHoy,
-                                        finalFiltersForTask.getIdOrigenDomiciliacion(), null, nombreContrato, filter);
-
-                                for (RespGeneracionArchivosDomi gen : generaciones) {
-                                    String respGeneracion = gen.getIdArchivo();
-                                    archivoGenerado.setNombreArchivo(gen.getNombreArchivo());
-                                    
-                                    Long idArchivoGenerado = null;
-                                    if (respGeneracion != null && domiciliacionesService.isNumber(respGeneracion)
-                                            && Long.parseLong(respGeneracion) > 0) {
-                                        idArchivoGenerado = Long.parseLong(respGeneracion);
-                                        archivoGenerado.setGenerated(Boolean.TRUE);
-                                        String message = domiciliacionesService.getFileGeneratedData(gen.getNombreArchivo(),
-                                                filtro) + " - " + "Archivo generado correctamente";
-                                        archivoGenerado.getErrors().add(message);
-                                    } else {
-                                        idArchivoGenerado = Long.parseLong("0");
-                                        archivoGenerado.setGenerated(Boolean.FALSE);
-                                        archivoGenerado.getErrors().add(respGeneracion);
-                                    }
-
-                                    // Determinar pathFile
-                                    if (ID_BANCOMER_NCI.equals(filtro.getIdTipoArchivo())) {
-                                        pathFile = PATH_ACHIVO_DOMI_BANCOMER;
-                                    }
-
-                                    // Determinar tipo de cuenta
-                                    if (filtro.getIdsTiposCuenta() != null) {
-                                        idTipoCuentaGenerado = (filtro.getIdsTiposCuenta().size() > 1) ? "0"
-                                                : String.valueOf(filtro.getIdsTiposCuenta().get(0));
-                                    }
-
-                                    // Determinar banco
-                                    if (filtro.getIdsBancos() != null && !filtro.getIdsBancos().isEmpty()) {
-                                        idBancoGenerado = String.valueOf(filtro.getIdsBancos().get(0));
-                                    } else {
-                                        idBancoGenerado = "848";
-                                    }
-
-                                    // Determinar tipo de archivo
-                                    idTipoArchivoGenerado = (filtro.getArchivoUnico()) ? "1" : "2";
-
-                                    // Registrar en bitácora
-                                    domiciliacionesService.registrarArchivoDomiBitacora(new OperacionDomiBitacoraFilter(
-                                            finalRequest.getFolio(), idArchivoGenerado, Long.parseLong(finalRequest.getIdTipoContrato()),
-                                            Long.parseLong((archivoGenerado.getGenerated()) ? "1" : "0"),
-                                            Long.parseLong(idTipoArchivoGenerado), Long.parseLong(idBancoGenerado),
-                                            Long.parseLong(String.valueOf(filtro.getIdTipoArchivo())),
-                                            Long.parseLong(idTipoCuentaGenerado),
-                                            (archivoGenerado.getNombreArchivo() == null
-                                                    || archivoGenerado.getNombreArchivo().length() == 0) ? "SIN NOMBRE"
-                                                            : archivoGenerado.getNombreArchivo(),
-                                            (archivoGenerado.getErrors() != null && !archivoGenerado.getErrors().isEmpty())
-                                                    ? archivoGenerado.getErrors().get(0)
-                                                    : "",
-                                            pathFile, (archivoGenerado.getGenerated()) ? 1 : 0, finalRequest.getUsuario()));
-
-                                    // Agregar a valores parciales
-                                    valoresParciales.add(new ArchivoDomiVO(null, null, null, archivoGenerado.getNombreArchivo(),
-                                            finalRequest.getUsuario(), String.valueOf(idArchivoGenerado),
-                                            archivoGenerado.getGenerated(),
-                                            (archivoGenerado.getErrors() != null && !archivoGenerado.getErrors().isEmpty())
-                                                    ? archivoGenerado.getErrors().get(0)
-                                                    : "",
-                                            pathFile));
-                                }
-                            } catch (Exception e) {
-                                archivoGenerado.setGenerated(Boolean.FALSE);
-                                String[] error = e.getMessage().split(":");
-                                archivoGenerado.getErrors().add(error[0]);
-                            }
-                            
-                            return new GeneracionResultado(archivoGenerado, valoresParciales);
-                        }
-                    };
+                for (SolicitudFilter filtro : filtros) {
+                    archivoGenerado = new GeneracionArchivoDomiVO();
+                    idTipoCuentaGenerado = "0";
+                    idBancoGenerado = "0";
+                    idTipoArchivoGenerado = "0";
                     
-                    // Enviar tarea al executor
-                    futures.add(executorService.submit(task));
+                    nombreContrato = "PGA 961220PB4"; // Valor por defecto para null o cualquier otro banco
+                    if (filtro.getIdsBancos() != null && !filtro.getIdsBancos().isEmpty()) {
+                        String primerBanco = String.valueOf(filtro.getIdsBancos().get(0));
+                        if ("460".equals(primerBanco)) {
+                            nombreContrato = "PGA-961220PB4";
+                        }
+                    }
+                    // Try Catch propio para tratar resultados
+                    try {
+                        filter = new ArchivoDomiciliacionfilter();
+                        filter.setIdOrigenSolicitud(
+                                (filtro.getOrigenAportacion() != null ? filtro.getOrigenAportacion().getId() : null));
+
+                        generaciones = this.domiciliacionesService.generarArchivoDomiF4MantLotes(filtro, fechaHoy,
+                                filters.getIdOrigenDomiciliacion(), idArchivoGenerado, nombreContrato, filter);
+
+                        // Se traen las generaciones (posibles lotes)
+                        for (RespGeneracionArchivosDomi gen : generaciones) {
+                            archivoGenerado = new GeneracionArchivoDomiVO();
+                            idTipoCuentaGenerado = "0";
+                            idBancoGenerado = "0";
+                            idTipoArchivoGenerado = "0";
+                            respGeneracion = gen.getIdArchivo();
+
+                            archivoGenerado.setNombreArchivo(gen.getNombreArchivo());
+                            if (respGeneracion != null && this.domiciliacionesService.isNumber(respGeneracion)
+                                    && Long.parseLong(respGeneracion) > 0) {
+
+                                idArchivoGenerado = Long.parseLong(respGeneracion);
+                                archivoGenerado.setGenerated(Boolean.TRUE);
+
+                                message = this.domiciliacionesService.getFileGeneratedData(gen.getNombreArchivo(),
+                                        filtro) + " - " + "Archivo generado correctamente";
+                                archivoGenerado.getErrors().add(message);
+                            } else {
+                                idArchivoGenerado = Long.parseLong("0");
+                                archivoGenerado.setGenerated(Boolean.FALSE);
+                                archivoGenerado.getErrors().add(respGeneracion);
+                            }
+
+                            // Se agrega resultado (independientemente si se generó o no) a la lista
+                            // original
+                            resultados.add(archivoGenerado);
+
+                            // Se anexa ruta
+                            if (ID_BANAMEX_NCI.equals(filtro.getIdTipoArchivo())) {
+                                pathFile = PATH_ACHIVO_DOMI_BANAMEX;
+                            } else if (ID_BANCOMER_NCI.equals(filtro.getIdTipoArchivo())) {
+                                pathFile = PATH_ACHIVO_DOMI_BANCOMER;
+                            }
+
+                            // Se determina el tipo de cuenta
+                            if (filtro.getIdsTiposCuenta() != null) {
+                                idTipoCuentaGenerado = (filtro.getIdsTiposCuenta().size() > 1) ? "0"
+                                        : String.valueOf(filtro.getIdsTiposCuenta().get(0));
+                            } else {
+                                idTipoCuentaGenerado = "0";
+                            }
+
+                            // Se determina el banco ("Ctas a incluir")
+                            if (filtro.getIdsBancos() != null && !filtro.getIdsBancos().isEmpty()) {
+                                idBancoGenerado = String.valueOf(filtro.getIdsBancos().get(0));
+                            } else {
+                                idBancoGenerado = "848";
+                            }
+
+                            // Se determina tipo de archivo (unico o individual)
+                            idTipoArchivoGenerado = (filtro.getArchivoUnico()) ? "1" : "2";
+
+                            // Se registra en tabla relacion folio-archivo(s)
+                            this.domiciliacionesService.registrarArchivoDomiBitacora(new OperacionDomiBitacoraFilter(
+                                    request.getFolio(), idArchivoGenerado, Long.parseLong(request.getIdTipoContrato()),
+                                    Long.parseLong((archivoGenerado.getGenerated()) ? "1" : "0"),
+                                    Long.parseLong(idTipoArchivoGenerado), Long.parseLong(idBancoGenerado),
+                                    Long.parseLong(String.valueOf(filtro.getIdTipoArchivo())),
+                                    Long.parseLong(idTipoCuentaGenerado),
+                                    (archivoGenerado.getNombreArchivo() == null
+                                            || archivoGenerado.getNombreArchivo().length() == 0) ? "SIN NOMBRE"
+                                                    : archivoGenerado.getNombreArchivo(),
+                                    (archivoGenerado.getErrors() != null && !archivoGenerado.getErrors().isEmpty())
+                                            ? archivoGenerado.getErrors().get(0)
+                                            : "",
+                                    pathFile, (archivoGenerado.getGenerated()) ? 1 : 0, request.getUsuario()));
+
+                            // Se agrega resultado
+                            valores.add(new ArchivoDomiVO(null, null, null, archivoGenerado.getNombreArchivo(),
+                                    request.getUsuario(), String.valueOf(idArchivoGenerado),
+                                    archivoGenerado.getGenerated(),
+                                    (archivoGenerado.getErrors() != null && !archivoGenerado.getErrors().isEmpty())
+                                            ? archivoGenerado.getErrors().get(0)
+                                            : "",
+                                    pathFile));
+                        }
+
+                    } catch (Exception e) {
+                        archivoGenerado.setGenerated(Boolean.FALSE);
+                        error = e.getMessage().split(":");
+                        archivoGenerado.getErrors().add(error[0]);
+                    }
                 }
             }
         }
-        
-        // Esperar a que todas las tareas terminen y recolectar resultados
-        for (Future<GeneracionResultado> future : futures) {
-            try {
-                GeneracionResultado resultado = future.get();
-                resultados.add(resultado.getArchivoGenerado());
-                valores.addAll(resultado.getValoresParciales());
-            } catch (Exception e) {
-                LOGGER.error("Error procesando tarea paralela", e);
-            }
-        }
-        
         
         // Se respode a BUS si terminó la ejecución (en caso de aplicar)
         resouestaFinalizacionArch = this.domiciliacionesService.responderFinalizacionArchivosDomi(request.getFolio());
         
         if (!resouestaFinalizacionArch) {
             response = new GeneracionArchivosDomiBeanResponse(CtrlResponseWSEnum.WS_ERROR.getCodRet(),
-                    CtrlResponseWSEnum.WS_ERROR.getMsgRet(),
-                    "Error al responder la finalización de archivos a BUS");
+                                     CtrlResponseWSEnum.WS_ERROR.getMsgRet(),
+                                     "Errro al responder la finalización de archivos a BUS");
         }
 
         // Formalización del response
@@ -1130,61 +1108,29 @@ public GeneracionArchivosDomiBeanResponse generarArchivosDomi(PeticionesDomiBean
         missing.setFaultstring(CtrlResponseWSEnum.WS_ERROR.getMsgRet() + ", generarArchivosDomiLotes");
         throw new MitWebServiceException(e.getMessage(), missing);
     } finally {
-    	if (executorService != null) {
-            executorService.shutdown();
-            try {
-                if (!executorService.awaitTermination(Long.MAX_VALUE, TimeUnit.NANOSECONDS)) {
-                    executorService.shutdownNow();
-                }
-            } catch (InterruptedException e) {
-                executorService.shutdownNow();
-                Thread.currentThread().interrupt();
-            }
-        }
-        //dummy = null;
+        dummy = null;
         response = null;
-        valores = null;
         val = null;
         filters = null;
         filtros = null;
-        //fechaHoy = null;
-        //filter = null;
-        //message = null;
-        //archivoGenerado = null;
-        //respGeneracion = null;
-        //error = null;
+        fechaHoy = null;
+        filter = null;
+        message = null;
+        archivoGenerado = null;
+        respGeneracion = null;
+        error = null;
         resultados = null;
-        //idArchivoGenerado = null;
-        //pathFile = null;
-        //idTipoCuentaGenerado = null;
-        //idBancoGenerado = null;
-        //idTipoArchivoGenerado = null;
-        //nombreContrato = null;
+        idArchivoGenerado = null;
+        pathFile = null;
+        idTipoCuentaGenerado = null;
+        idBancoGenerado = null;
+        idTipoArchivoGenerado = null;
+        nombreContrato = null;
         generaciones = null;
         resouestaFinalizacionArch = null;
-        executorService = null;
-        futures = null;
     }
 }
 
-private static class GeneracionResultado {
-    private final GeneracionArchivoDomiVO archivoGenerado;
-    private final List<ArchivoDomiVO> valoresParciales;
-    
-    public GeneracionResultado(GeneracionArchivoDomiVO archivoGenerado, List<ArchivoDomiVO> valoresParciales) {
-        this.archivoGenerado = archivoGenerado;
-        this.valoresParciales = valoresParciales;
-    }
-    
-    public GeneracionArchivoDomiVO getArchivoGenerado() {
-        return archivoGenerado;
-    }
-    
-    public List<ArchivoDomiVO> getValoresParciales() {
-        return valoresParciales;
-    }
-}
-	
 	/**
 
 
