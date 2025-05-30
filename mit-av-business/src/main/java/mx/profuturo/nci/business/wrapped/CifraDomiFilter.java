@@ -3,7 +3,7 @@ package mx.profuturo.nci.business.wrapped;
 public class CifraDomiFilter {
 	private String cveBancoIncluir;
 	private String idArchivoGenerar;
-	private String idTipoCta;
+	//private String idTipoCta;
 	private String fechaInicio;
 	private String fechaFin;
 	private String origenAportacion;
@@ -14,21 +14,19 @@ public class CifraDomiFilter {
 	
 	public CifraDomiFilter ( String cveBancoIncluir
 						   , String idArchivoGenerar
-						   , String idTipoCta) {
+						   ) {
 		this.cveBancoIncluir = cveBancoIncluir;
 		this.idArchivoGenerar = idArchivoGenerar;
-		this.idTipoCta = idTipoCta;
+		//this.idTipoCta = idTipoCta;
 	}
 	
 	public CifraDomiFilter ( String cveBancoIncluir
 						   , String idArchivoGenerar
-						   , String idTipoCta
 						   , String fechaInicio
 						   , String fechaFin
 						   , String origenAportacion) {
 		this.cveBancoIncluir = cveBancoIncluir;
 		this.idArchivoGenerar = idArchivoGenerar;
-		this.idTipoCta = idTipoCta;
 		this.fechaInicio = fechaInicio;
 		this.fechaFin = fechaFin;
 		this.origenAportacion = origenAportacion;
@@ -48,14 +46,6 @@ public class CifraDomiFilter {
 
 	public void setIdArchivoGenerar(String idArchivoGenerar) {
 		this.idArchivoGenerar = idArchivoGenerar;
-	}
-
-	public String getIdTipoCta() {
-		return idTipoCta;
-	}
-
-	public void setIdTipoCta(String idTipoCta) {
-		this.idTipoCta = idTipoCta;
 	}
 
 	public String getFechaInicio() {

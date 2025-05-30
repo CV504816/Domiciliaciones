@@ -33,7 +33,6 @@
 			  type="mx.profuturo.nci.business.vo.RegistroCifrasDomiVO">
 		
 			<result property="archivoGenerar" 		column="ARCHIVO_GENERAR" 	jdbcType="VARCHAR" />
-			<result property="tipoCta" 				column="TIPO_CTA"  			jdbcType="VARCHAR" />
 			<result property="bancoIncluir" 		column="BANCO_INLUIR"  		jdbcType="VARCHAR" />
 	
 	</resultMap>
@@ -43,8 +42,10 @@
 		
 			<result property="descripcion" 		column="DESCRIPCION" 	jdbcType="VARCHAR" />
 			<result property="total" 			column="TOTAL"  		jdbcType="VARCHAR" />
+			<result property="origenAportacion" column="ORIGEN_APORTACION"/>
 	
 	</resultMap>
+	
 	
 	<resultMap id="ResultMapUltimosArchivosGenerados"
 			   type="mx.profuturo.nci.business.vo.ArchivosGeneradosDomiVO">
@@ -277,6 +278,7 @@
 			    AND 
 			    SOL.FTN_CVE_BANCO NOT IN (460) 
 			    AND SOL.FTD_FEH_PROX_CARGO BETWEEN TO_DATE(#{fechaInicio},'DD/MM/YYYY') AND TO_DATE(#{fechaFin},'DD/MM/YYYY')
+
 			    AND SOL.FTN_ID_ORIGEN_SOLICITUD <![CDATA[ <> ]]> 1042
 			    AND SOL.FTN_ESTATUS_CARGO IN ( 498 )
 			))
@@ -299,62 +301,64 @@
 				  , ( SELECT FCC_VALOR
 					  FROM TCCRXGRAL_CAT_CATALOGO 
 					  WHERE FCN_ID_CAT_CATALOGO = #{idArchivoGenerar} ) ARCHIVO_GENERAR
-				  , ( SELECT FCC_VALOR
-					  FROM TCCRXGRAL_CAT_CATALOGO 
-					  WHERE FCN_ID_CAT_CATALOGO = #{idTipoCta} ) TIPO_CTA
 			FROM DUAL
 	</select>
 	
 	
-	<select id="getImportesTotalesCifra"
-			parameterType="mx.profuturo.nci.business.wrapped.CifraDomiFilter"
-			resultMap="ResultMapImportesTotalesCifra">
-			
-			WITH CIFRAS_DETALLE AS(
-			(SELECT
-			    'IMPORTE TOTAL'  AS DESCRIPCION
-			    ,SUM( FTN_IMPORTE ) AS TOTAL
-			FROM TTAFOAVOL_SOLICITUD SOL
-			WHERE
-			    SOL.FTN_ESTATUS_SOLICITUD = 512       				  -- ==> SOLICITUDES ACEPTADAS ( FIJO )
-			    AND SOL.FTN_ID_TIPO_CTA = #{idTipoCta}             		  -- ==> TARJETA DEBITO 496, CLABE 497, CHEQUERA 847
-			    AND SOL.FTN_CVE_BANCO   = #{cveBancoIncluir}              -- ==> BANAMEX 459, BBVA 460, OTROS 848
-			    AND SOL.FTD_FEH_PROX_CARGO BETWEEN TO_DATE(#{fechaInicio},'DD/MM/YYYY') AND TO_DATE(#{fechaFin},'DD/MM/YYYY')
-			    <if test='origenAportacion.equals("845")'>
-			    	AND SOL.FTN_ORIGEN_APORTACION = #{origenAportacion}        -- ==>  845 DOMICILIACIONES TRASPASOS ,0 DOMICILIACIONES
-			    </if>
-			    <if test='origenAportacion.equals("0")'>
-			    	AND SOL.FTN_ORIGEN_APORTACION <![CDATA[ <> ]]> 845        -- ==>  845 DOMICILIACIONES TRASPASOS ,0 DOMICILIACIONES
-			    </if>
-			    AND SOL.FTN_ID_ORIGEN_SOLICITUD <![CDATA[ <> ]]> 1042
-			    AND SOL.FTN_ESTATUS_CARGO IN ( 498 )
-			    )
-			UNION ALL
-			(SELECT
-			    'TOTAL REGISTROS'  AS DESCRIPCION
-			    ,COUNT(*) AS TOTAL
-			FROM TTAFOAVOL_SOLICITUD SOL
-			WHERE
-			    SOL.FTN_ESTATUS_SOLICITUD = 512        					-- ==> SOLICITUDES ACEPTADAS ( FIJO )
-			    AND SOL.FTN_ID_TIPO_CTA = #{idTipoCta}              		-- ==> TARJETA DEBITO 496, CLABE 497, CHEQUERA 847
-			    AND SOL.FTN_CVE_BANCO = #{cveBancoIncluir}                	-- ==> BANAMEX 459, BBVA 460, OTROS 848
-			    AND SOL.FTD_FEH_PROX_CARGO BETWEEN TO_DATE(#{fechaInicio},'DD/MM/YYYY') AND TO_DATE(#{fechaFin},'DD/MM/YYYY')
-			    <if test='origenAportacion.equals("845")'>
-			    	AND SOL.FTN_ORIGEN_APORTACION = #{origenAportacion}        -- ==>  845 DOMICILIACIONES TRASPASOS ,0 DOMICILIACIONES
-			    </if>
-			    <if test='origenAportacion.equals("0")'>
-			    	AND SOL.FTN_ORIGEN_APORTACION <![CDATA[ <> ]]> 845        -- ==>  845 DOMICILIACIONES TRASPASOS ,0 DOMICILIACIONES
-			    </if>
-			    AND SOL.FTN_ID_ORIGEN_SOLICITUD <![CDATA[ <> ]]> 1042
-			    AND SOL.FTN_ESTATUS_CARGO IN ( 498 )
-			)
-			)
-			SELECT 
-			     DESCRIPCION
-			    ,CASE WHEN DESCRIPCION LIKE 'IMPORTE TOTAL' THEN ('$' || TO_CHAR(TOTAL,'fm9999,999,999,990.00')) ELSE TO_CHAR(TOTAL,'fm9999,999,999,990') END AS TOTAL 
-			FROM CIFRAS_DETALLE CD
-			
-	</select>
+<select id="getImportesTotalesCifra"
+	parameterType="mx.profuturo.nci.business.wrapped.CifraDomiFilter"
+	resultMap="ResultMapImportesTotalesCifra">
+
+	WITH CIFRAS_DETALLE AS(
+	(SELECT
+	    'IMPORTE TOTAL'  AS DESCRIPCION,
+	    SUM(FTN_IMPORTE) AS TOTAL,
+	    #{origenAportacion} AS ORIGEN_APORTACION
+	FROM TTAFOAVOL_SOLICITUD SOL
+	WHERE
+	    SOL.FTN_ESTATUS_SOLICITUD = 512
+	    AND SOL.FTN_CVE_BANCO = #{cveBancoIncluir}
+	    AND SOL.FTD_FEH_PROX_CARGO BETWEEN TO_DATE(#{fechaInicio},'DD/MM/YYYY') AND TO_DATE(#{fechaFin},'DD/MM/YYYY')
+	    <if test='origenAportacion.equals("845")'>
+	    	AND SOL.FTN_ORIGEN_APORTACION = #{origenAportacion}
+	    </if>
+	    <if test='origenAportacion.equals("0")'>
+	    	AND SOL.FTN_ORIGEN_APORTACION <![CDATA[ <> ]]> 845
+	    </if>
+	    AND SOL.FTN_ID_ORIGEN_SOLICITUD <![CDATA[ <> ]]> 1042
+	    AND SOL.FTN_ESTATUS_CARGO IN (498)
+	)
+	UNION ALL
+	(SELECT
+	    'TOTAL REGISTROS'  AS DESCRIPCION,
+	    COUNT(*) AS TOTAL,
+	    #{origenAportacion} AS ORIGEN_APORTACION
+	FROM TTAFOAVOL_SOLICITUD SOL
+	WHERE
+	    SOL.FTN_ESTATUS_SOLICITUD = 512
+	    AND SOL.FTN_CVE_BANCO = #{cveBancoIncluir}
+	    AND SOL.FTD_FEH_PROX_CARGO BETWEEN TO_DATE(#{fechaInicio},'DD/MM/YYYY') AND TO_DATE(#{fechaFin},'DD/MM/YYYY')
+	    <if test='origenAportacion.equals("845")'>
+	    	AND SOL.FTN_ORIGEN_APORTACION = #{origenAportacion}
+	    </if>
+	    <if test='origenAportacion.equals("0")'>
+	    	AND SOL.FTN_ORIGEN_APORTACION <![CDATA[ <> ]]> 845
+	    </if>
+	    AND SOL.FTN_ID_ORIGEN_SOLICITUD <![CDATA[ <> ]]> 1042
+	    AND SOL.FTN_ESTATUS_CARGO IN (498)
+	)
+	)
+	SELECT 
+	     DESCRIPCION,
+	     CASE 
+	         WHEN DESCRIPCION LIKE 'IMPORTE TOTAL' THEN ('$' || TO_CHAR(TOTAL,'fm9999,999,999,990.00')) 
+	         ELSE TO_CHAR(TOTAL,'fm9999,999,999,990') 
+	     END AS TOTAL,
+	     ORIGEN_APORTACION
+	FROM CIFRAS_DETALLE CD
+
+</select>
+
 	
 	
 	<select id="getImportesTotalesCifraOtrosBancos"
@@ -364,15 +368,16 @@
 			WITH CIFRAS_DETALLE AS(
 			(SELECT
 			    'IMPORTE TOTAL'  AS DESCRIPCION
-			    ,SUM( FTN_IMPORTE ) AS TOTAL
+			    ,SUM( FTN_IMPORTE ) AS TOTAL,
+			    #{origenAportacion} AS ORIGEN_APORTACION
+			    
 			FROM TTAFOAVOL_SOLICITUD SOL
 			LEFT JOIN TCCRXGRAL_CAT_CATALOGO p ON p.FCN_ID_CAT_CATALOGO = SOL.FTN_ID_PERIODO
 			JOIN TCCRXGRAL_CAT_CATALOGO cbank ON cbank.FCN_ID_CAT_CATALOGO = SOL.FTN_CVE_BANCO 
 			JOIN TMSISGRAL_MAP_NCI_ITGY r_map ON r_map.TMN_CVE_NCI = SOL.FTN_CVE_BANCO AND TMC_USO = 'BANCOS'  and r_map.TMC_VIGENCIA = 1 and cbank.FCB_VIGENCIA =1
 			WHERE 
 			    SOL.FTN_ESTATUS_SOLICITUD = 512       				  -- ==> SOLICITUDES ACEPTADAS ( FIJO )
-			    AND SOL.FTN_ID_TIPO_CTA = #{idTipoCta}             		  -- ==> TARJETA DEBITO 496, CLABE 497, CHEQUERA 847
-			    AND SOL.FTN_CVE_BANCO NOT IN (459, 460)              	  -- ==> BANAMEX 459, BBVA 460, OTROS 848
+			    AND SOL.FTN_CVE_BANCO NOT IN (460)              	  -- ==> BANAMEX 459, BBVA 460, OTROS 848
 			    AND SOL.FTD_FEH_PROX_CARGO BETWEEN TO_DATE(#{fechaInicio},'DD/MM/YYYY') AND TO_DATE(#{fechaFin},'DD/MM/YYYY')
 			    <if test='origenAportacion.equals("845")'>
 			    	AND SOL.FTN_ORIGEN_APORTACION = #{origenAportacion}        -- ==>  845 DOMICILIACIONES TRASPASOS ,0 DOMICILIACIONES
@@ -386,15 +391,15 @@
 			UNION ALL
 			(SELECT
 			    'TOTAL REGISTROS'  AS DESCRIPCION
-			    ,COUNT(*) AS TOTAL
+			    ,COUNT(*) AS TOTAL,
+			   	#{origenAportacion} AS ORIGEN_APORTACION
 			FROM TTAFOAVOL_SOLICITUD SOL
 			LEFT JOIN TCCRXGRAL_CAT_CATALOGO p ON p.FCN_ID_CAT_CATALOGO = SOL.FTN_ID_PERIODO
 			JOIN TCCRXGRAL_CAT_CATALOGO cbank ON cbank.FCN_ID_CAT_CATALOGO = SOL.FTN_CVE_BANCO 
 			JOIN TMSISGRAL_MAP_NCI_ITGY r_map ON r_map.TMN_CVE_NCI = SOL.FTN_CVE_BANCO AND TMC_USO = 'BANCOS'  and r_map.TMC_VIGENCIA = 1 and cbank.FCB_VIGENCIA =1
 			WHERE 
 			    SOL.FTN_ESTATUS_SOLICITUD = 512        					-- ==> SOLICITUDES ACEPTADAS ( FIJO )
-			    AND SOL.FTN_ID_TIPO_CTA = #{idTipoCta}              		-- ==> TARJETA DEBITO 496, CLABE 497, CHEQUERA 847
-			    AND SOL.FTN_CVE_BANCO NOT IN (459, 460)                  	-- ==> BANAMEX 459, BBVA 460, OTROS 848
+			    AND SOL.FTN_CVE_BANCO NOT IN (460)                  	-- ==> BANAMEX 459, BBVA 460, OTROS 848
 			    AND SOL.FTD_FEH_PROX_CARGO BETWEEN TO_DATE(#{fechaInicio},'DD/MM/YYYY') AND TO_DATE(#{fechaFin},'DD/MM/YYYY')
 			    <if test='origenAportacion.equals("845")'>
 			    	AND SOL.FTN_ORIGEN_APORTACION = #{origenAportacion}        -- ==>  845 DOMICILIACIONES TRASPASOS ,0 DOMICILIACIONES
@@ -408,7 +413,8 @@
 			)
 			SELECT 
 			     DESCRIPCION
-			    ,CASE WHEN DESCRIPCION LIKE 'IMPORTE TOTAL' THEN ('$' || TO_CHAR(TOTAL,'fm9999,999,999,990.00')) ELSE TO_CHAR(TOTAL,'fm9999,999,999,990') END AS TOTAL 
+			    ,CASE WHEN DESCRIPCION LIKE 'IMPORTE TOTAL' THEN ('$' || TO_CHAR(TOTAL,'fm9999,999,999,990.00')) ELSE TO_CHAR(TOTAL,'fm9999,999,999,990') END AS TOTAL,
+			     ORIGEN_APORTACION
 			FROM CIFRAS_DETALLE CD
 			
 	</select>

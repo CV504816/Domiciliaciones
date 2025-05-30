@@ -6,11 +6,11 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlType;
 
-@XmlType(propOrder={"archivoGenerar", "tipoCta", "bancoIncluir", "totales"})
+@XmlType(propOrder={"archivoGenerar", "bancoIncluir", "origenAportacion", "totales"})
 public class RegistroCifrasDomiVO {
 	private String archivoGenerar;
-	private String tipoCta;
 	private String bancoIncluir;
+	private String origenAportacion; 
 	private List <TotalesRegistroDomiVO> totales;
 	
 	public RegistroCifrasDomiVO () {
@@ -18,12 +18,12 @@ public class RegistroCifrasDomiVO {
 	}
 	
 	public RegistroCifrasDomiVO ( String archivoGenerar
-								, String tipoCta
 								, String bancoIncluir
+								, String origenAportacion
 								, List <TotalesRegistroDomiVO> totales) {
 		this.archivoGenerar = archivoGenerar;
-		this.tipoCta = tipoCta;
 		this.bancoIncluir = bancoIncluir;
+		this.origenAportacion = origenAportacion;
 		this.totales = totales;
 	}
 
@@ -35,13 +35,6 @@ public class RegistroCifrasDomiVO {
 		this.archivoGenerar = archivoGenerar;
 	}
 
-	public String getTipoCta() {
-		return tipoCta;
-	}
-
-	public void setTipoCta(String tipoCta) {
-		this.tipoCta = tipoCta;
-	}
 
 	public String getBancoIncluir() {
 		return bancoIncluir;
@@ -49,6 +42,14 @@ public class RegistroCifrasDomiVO {
 
 	public void setBancoIncluir(String bancoIncluir) {
 		this.bancoIncluir = bancoIncluir;
+	}
+
+	public String getOrigenAportacion() {
+		return origenAportacion;
+	}
+
+	public void setOrigenAportacion(String origenAportacion) {
+		this.origenAportacion = origenAportacion;
 	}
 
 	@XmlElementWrapper(name = "registrosTotales")

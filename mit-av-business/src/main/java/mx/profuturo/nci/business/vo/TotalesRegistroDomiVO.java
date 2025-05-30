@@ -3,15 +3,18 @@ package mx.profuturo.nci.business.vo;
 public class TotalesRegistroDomiVO {
 	private String descripcion;
 	private String total;
+	private String origenAportacion;
 	
 	public TotalesRegistroDomiVO () {
 		
 	}
 	
 	public TotalesRegistroDomiVO ( String descripcion
-							     , String total) {
+							     , String total
+							     , String origenAportacion) {
 		this.descripcion = descripcion;
 		this.total = total;
+		this.origenAportacion = origenAportacion;
 	}
 
 	public String getDescripcion() {
@@ -30,6 +33,13 @@ public class TotalesRegistroDomiVO {
 		this.total = total;
 	}
 	
+	public String getOrigenAportacion() {
+		return origenAportacion;
+	}
+
+	public void setOrigenAportacion(String origenAportacion) {
+		this.origenAportacion = origenAportacion;
+	}
 	
 
 }

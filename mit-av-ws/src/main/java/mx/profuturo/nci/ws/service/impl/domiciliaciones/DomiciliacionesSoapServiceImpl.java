@@ -698,32 +698,52 @@ public class DomiciliacionesSoapServiceImpl implements IDomiciliacionesSoapServi
 			if (cifrasTotales != null && !cifrasTotales.isEmpty()) {
 				cifrasTotales = this.domiciliacionesService.ordenarListaCifrasTotales(cifrasTotales);
 			}
-
+			
 			// Busqueda de detalles
 			registros = new ArrayList<RegistroCifrasDomiVO>();
-			for (PeticionDomiciliacionVO reg : request.getPeticiones()) {
-				for (TiposCuentaDomiVO cta : reg.getTiposCuenta()) {
-					registroCifraAux = this.domiciliacionesService.getCifraDomi(new CifraDomiFilter(
-							reg.getCveBancoIncluir(), reg.getArchivoGenenerar(), cta.getIdTipoCta()));
-					if (registroCifraAux != null) {
-						if (reg.getCveBancoIncluir().equals("848")) { // CONSULTA OTROS BANCOS
-							totales = this.domiciliacionesService
-									.getImportesTotalesCifraOtrosBancos(new CifraDomiFilter(reg.getCveBancoIncluir(),
-											reg.getArchivoGenenerar(), cta.getIdTipoCta(), request.getFechaInicio(),
-											request.getFechaFin(), request.getOrigenAportacion()));
+			List<String> OrigenesAportacion = Arrays.asList("0", "845");
 
+
+			for (PeticionDomiciliacionVO reg : request.getPeticiones()) {
+
+				for (String origenAportacion : OrigenesAportacion) {
+
+					CifraDomiFilter filtroBase = new CifraDomiFilter(
+						reg.getCveBancoIncluir(),
+						reg.getArchivoGenenerar()
+					);
+					
+					registroCifraAux = this.domiciliacionesService.getCifraDomi(filtroBase);
+						if (reg.getCveBancoIncluir().equals("848")) { // CONSULTA OTROS BANCOS
+
+							totales = this.domiciliacionesService.getImportesTotalesCifraOtrosBancos(
+								new CifraDomiFilter(
+									reg.getCveBancoIncluir(),
+									reg.getArchivoGenenerar(),
+									request.getFechaInicio(),
+									request.getFechaFin(),
+									origenAportacion
+								)
+							);
 						} else { // BANAMEX Y BBVA
-							totales = this.domiciliacionesService.getImportesTotalesCifra(new CifraDomiFilter(
-									reg.getCveBancoIncluir(), reg.getArchivoGenenerar(), cta.getIdTipoCta(),
-									request.getFechaInicio(), request.getFechaFin(), request.getOrigenAportacion()));
+
+							totales = this.domiciliacionesService.getImportesTotalesCifra(
+								new CifraDomiFilter(
+									reg.getCveBancoIncluir(),
+									reg.getArchivoGenenerar(),
+									request.getFechaInicio(),
+									request.getFechaFin(),
+									origenAportacion
+								)
+							);
 						}
+
 
 						registroCifraAux.setTotales(totales);
 						registros.add(registroCifraAux);
 					}
-
-				}
 			}
+
 
 			// Armado de response
 			response = new CifrasDomiBeanResponse(CtrlResponseWSEnum.WS_OK.getCodRet(),
