@@ -257,6 +257,7 @@ public class DomiciliacionesSoapServiceImpl implements IDomiciliacionesSoapServi
 		}
 	}
 
+	
 	/********************** GEN DE ARCHIVOS ORDINARIA ************************/
 	@Override
 	public GeneracionArchivosDomiBeanResponse generarArchivosDomiLotes(PeticionesDomiBeanRequest request) {
@@ -321,9 +322,9 @@ public class DomiciliacionesSoapServiceImpl implements IDomiciliacionesSoapServi
 				resultados = new ArrayList<GeneracionArchivoDomiVO>();
 				valores = new ArrayList<ArchivoDomiVO>();
 				// Request to filter
-				filters = this.domiciliacionesService.getDomiParameterMapFilter(
+				/*filters = this.domiciliacionesService.getDomiParameterMapFilter(
 						new PeticionesDomiFilter(request.getOrigenAportacion(), request.getFechaInicio(),
-								request.getFechaFin(), request.getUsuario(), request.getPeticiones()));
+								request.getFechaFin(), request.getUsuario(), request.getPeticiones())); */
 				filtros = this.domiciliacionesService.getCustomFilter(filters);
 
 				// Generar archivos
@@ -408,7 +409,7 @@ public class DomiciliacionesSoapServiceImpl implements IDomiciliacionesSoapServi
 						idTipoArchivoGenerado = (filtro.getArchivoUnico()) ? "1" : "2";
 
 						// Se registra en tabla relacion folio-archivo(s)
-						this.domiciliacionesService.registrarArchivoDomiBitacora(new OperacionDomiBitacoraFilter(
+						/* this.domiciliacionesService.registrarArchivoDomiBitacora(new OperacionDomiBitacoraFilter(
 								request.getFolio(), idArchivoGenerado, Long.parseLong(request.getIdTipoContrato()),
 								Long.parseLong((archivoGenerado.getGenerated()) ? "1" : "0"),
 								Long.parseLong(idTipoArchivoGenerado), Long.parseLong(idBancoGenerado),
@@ -418,7 +419,7 @@ public class DomiciliacionesSoapServiceImpl implements IDomiciliacionesSoapServi
 										? archivoGenerado.getErrors().get(0)
 										: "",
 								pathFile, (archivoGenerado.getGenerated()) ? 1 : 0, request.getUsuario()));
-
+						*/
 						// Se agrega resultado
 						valores.add(new ArchivoDomiVO(null, null, null, archivoGenerado.getNombreArchivo(),
 								request.getUsuario(), String.valueOf(idArchivoGenerado), archivoGenerado.getGenerated(),
@@ -583,6 +584,7 @@ public class DomiciliacionesSoapServiceImpl implements IDomiciliacionesSoapServi
 		DecimalFormat formatterPesos = null;
 		DecimalFormat formatterCount = null;
 		Boolean cifrasTotalesConPeriodos = null;
+		
 
 		try {
 			// Validacion reponse nulo
@@ -615,12 +617,10 @@ public class DomiciliacionesSoapServiceImpl implements IDomiciliacionesSoapServi
 
 				if (reg.getCveBancoIncluir().equals("848")) { // CONSULTA OTROS BANCOS
 					cifrasTotalesAux = this.domiciliacionesService
-							.getCifrasTotalesOtrosBancos(new CifrasTotalesDomiFilter(request.getOrigenAportacion(),
-									request.getFechaInicio(), request.getFechaFin(), tipoCtas, cveBancos));
+							.getCifrasTotalesOtrosBancos(new CifrasTotalesDomiFilter(request.getFechaInicio(), request.getFechaFin(), tipoCtas, cveBancos));
 				} else { // BBVA Y BANAMEX
 					cifrasTotalesAux = this.domiciliacionesService
-							.getCifrasTotales(new CifrasTotalesDomiFilter(request.getOrigenAportacion(),
-									request.getFechaInicio(), request.getFechaFin(), tipoCtas, cveBancos));
+							.getCifrasTotales(new CifrasTotalesDomiFilter( request.getFechaInicio(), request.getFechaFin(), tipoCtas, cveBancos));
 				}
 
 				cifrasTotales.addAll(cifrasTotalesAux);
@@ -942,6 +942,7 @@ public GeneracionArchivosDomiBeanResponse generarArchivosDomi(PeticionesDomiBean
     String idTipoArchivoGenerado = null;
     String nombreContrato = null;
     Boolean resouestaFinalizacionArch = null;
+    String idTipoContrato = null; 
 
     try {
         // Validacion reponse nulo
@@ -1054,8 +1055,11 @@ public GeneracionArchivosDomiBeanResponse generarArchivosDomi(PeticionesDomiBean
                             // Se determina el banco ("Ctas a incluir")
                             if (filtro.getIdsBancos() != null && !filtro.getIdsBancos().isEmpty()) {
                                 idBancoGenerado = String.valueOf(filtro.getIdsBancos().get(0));
+                                idTipoContrato = "9520";
                             } else {
                                 idBancoGenerado = "848";
+                                idTipoContrato = "9520";
+
                             }
 
                             // Se determina tipo de archivo (unico o individual)
@@ -1063,7 +1067,7 @@ public GeneracionArchivosDomiBeanResponse generarArchivosDomi(PeticionesDomiBean
 
                             // Se registra en tabla relacion folio-archivo(s)
                             this.domiciliacionesService.registrarArchivoDomiBitacora(new OperacionDomiBitacoraFilter(
-                                    request.getFolio(), idArchivoGenerado, Long.parseLong(request.getIdTipoContrato()),
+                                    request.getFolio(), idArchivoGenerado, Long.parseLong(idTipoContrato),
                                     Long.parseLong((archivoGenerado.getGenerated()) ? "1" : "0"),
                                     Long.parseLong(idTipoArchivoGenerado), Long.parseLong(idBancoGenerado),
                                     Long.parseLong(String.valueOf(filtro.getIdTipoArchivo())),

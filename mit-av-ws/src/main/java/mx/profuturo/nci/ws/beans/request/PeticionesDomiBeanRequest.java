@@ -10,39 +10,33 @@ import mx.profuturo.nci.business.util.UtilValidate;
 import mx.profuturo.nci.business.vo.PeticionDomiciliacionVO;
 import mx.profuturo.nci.business.vo.ValidacionesVO;
 
-@XmlType(propOrder={"origenAportacion", "fechaInicio","fechaFin", "usuario", "folio", "idTipoContrato", "peticiones"})
+@XmlType(propOrder={"fechaInicio","fechaFin", "usuario", "folio", "peticiones"})
 public class PeticionesDomiBeanRequest {
-	private String origenAportacion;
 	private String fechaInicio;
 	private String fechaFin;
 	private String usuario;
 	private String folio;
-	private String idTipoContrato;
 	private List <PeticionDomiciliacionVO> peticiones;
 	
 	public PeticionesDomiBeanRequest () {
 		
 	}
 	
-	public PeticionesDomiBeanRequest ( String origenAportacion
-								 	 , String fechaInicio
+	public PeticionesDomiBeanRequest ( String fechaInicio
 								 	 , String fechaFin
 								 	 , String usuario
 								 	 , List <PeticionDomiciliacionVO> peticiones) {
-		this.origenAportacion = origenAportacion;
 		this.fechaInicio = fechaInicio;
 		this.fechaFin = fechaFin;
 		this.usuario = usuario;
 		this.peticiones = peticiones;
 	}
 	
-	public PeticionesDomiBeanRequest ( String origenAportacion
-								 	 , String fechaInicio
+	public PeticionesDomiBeanRequest ( String fechaInicio
 								 	 , String fechaFin
 								 	 , String usuario
 								 	 , List <PeticionDomiciliacionVO> peticiones
 								 	 , String folio) {
-		this.origenAportacion = origenAportacion;
 		this.fechaInicio = fechaInicio;
 		this.fechaFin = fechaFin;
 		this.usuario = usuario;
@@ -50,13 +44,6 @@ public class PeticionesDomiBeanRequest {
 		this.folio = folio;
 	}
 
-	public String getOrigenAportacion() {
-		return origenAportacion;
-	}
-
-	public void setOrigenAportacion(String origenAportacion) {
-		this.origenAportacion = origenAportacion;
-	}
 
 	public String getFechaInicio() {
 		return fechaInicio;
@@ -90,14 +77,6 @@ public class PeticionesDomiBeanRequest {
 		this.folio = folio;
 	}
 	
-	public String getIdTipoContrato() {
-		return idTipoContrato;
-	}
-
-	public void setIdTipoContrato(String idTipoContrato) {
-		this.idTipoContrato = idTipoContrato;
-	}
-
 	@XmlElementWrapper(name = "peticiones")
 	@XmlElement(name = "peticion")
 	public List<PeticionDomiciliacionVO> getPeticiones() {
@@ -110,9 +89,6 @@ public class PeticionesDomiBeanRequest {
 	
 	public ValidacionesVO validarRequestCifras() {
 		
-		if( !UtilValidate.validaFormatoIntegerF4(this.origenAportacion, 7) ) {
-			return new ValidacionesVO( Boolean.FALSE, "Validar formato origenAportacion, LONG MAX 7" );
-		}
 		
 		if( !UtilValidate.validarFechaPorFormatoF4( this.fechaInicio , "dd/MM/yyyy") ) {
 			return new ValidacionesVO( Boolean.FALSE, "fechaInicio, validar formato dd/MM/yyyy" );
@@ -135,9 +111,6 @@ public class PeticionesDomiBeanRequest {
 	
 	public ValidacionesVO validarRequestArchivosDomi() {
 		
-		if( !UtilValidate.validaFormatoIntegerF4(this.origenAportacion, 7) ) {
-			return new ValidacionesVO( Boolean.FALSE, "Validar formato origenAportacion, LONG MAX 7" );
-		}
 		
 		if( !UtilValidate.validarFechaPorFormatoF4( this.fechaInicio , "dd/MM/yyyy") ) {
 			return new ValidacionesVO( Boolean.FALSE, "fechaInicio, validar formato dd/MM/yyyy" );
@@ -158,11 +131,7 @@ public class PeticionesDomiBeanRequest {
 		if (!UtilValidate.validaFormatoIntegerF4(this.folio, 20)) {
 			return new ValidacionesVO( Boolean.FALSE, "Validar formato de folio, LONG MAX 20" );
 		}
-		
-		if (!UtilValidate.validaFormatoIntegerF4(this.idTipoContrato, 7)) {
-			return new ValidacionesVO( Boolean.FALSE, "Validar formato de tipo de contrato, LONG MAX 7" );
-		}
-		
+			
 		return new ValidacionesVO( Boolean.TRUE , "Validacion exitosa." );
 	}
 	

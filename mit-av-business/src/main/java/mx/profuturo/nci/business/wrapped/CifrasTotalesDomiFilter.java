@@ -4,7 +4,6 @@ import java.util.List;
 import mx.profuturo.nci.business.vo.PeticionDomiciliacionVO;
 
 public class CifrasTotalesDomiFilter {
-	private String origenAportacion;
 	private String fechaInicio;
 	private String fechaFin;
 	private List <Integer> tipoCta;
@@ -14,25 +13,16 @@ public class CifrasTotalesDomiFilter {
 		
 	}
 	
-	public CifrasTotalesDomiFilter ( String origenAportacion
-						    	   , String fechaInicio
+	public CifrasTotalesDomiFilter ( String fechaInicio
 						    	   , String fechaFin
 						    	   , List <Integer> tipoCta
 						    	   , List <Integer> cveBanco) {
-		this.origenAportacion = origenAportacion;
 		this.fechaInicio = fechaInicio;
 		this.fechaFin = fechaFin;
 		this.tipoCta = tipoCta;
 		this.cveBanco = cveBanco;
 	}
 
-	public String getOrigenAportacion() {
-		return origenAportacion;
-	}
-
-	public void setOrigenAportacion(String origenAportacion) {
-		this.origenAportacion = origenAportacion;
-	}
 
 	public String getFechaInicio() {
 		return fechaInicio;
