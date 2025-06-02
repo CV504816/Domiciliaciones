@@ -608,9 +608,9 @@ public class DomiciliacionesSoapServiceImpl implements IDomiciliacionesSoapServi
 				tipoCtas = new ArrayList<Integer>();
 				cveBancos = new ArrayList<Integer>();
 
-				for (TiposCuentaDomiVO cta : reg.getTiposCuenta()) {
+				/*for (TiposCuentaDomiVO cta : reg.getTiposCuenta()) {
 					tipoCtas.add(Integer.parseInt(cta.getIdTipoCta()));
-				}
+				}*/
 
 				cveBancos.add(Integer.parseInt(reg.getCveBancoIncluir()));
 				cifrasTotalesAux = new ArrayList<CifrasTotalesDomiVO>();

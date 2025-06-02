@@ -124,12 +124,6 @@
 			FROM TTAFOAVOL_SOLICITUD SOL
 			WHERE 
 			    SOL.FTN_ESTATUS_SOLICITUD = 512        				-- ==> SOLICITUDES ACEPTADAS ( FIJO )
-			    AND SOL.FTN_ID_TIPO_CTA IN 
-			    <if test="tipoCta != null and (tipoCta.size() > 0 )">
-			    	<foreach item="cta"  index="index" collection="tipoCta" open="(" separator="," close=")">
-						#{cta}
-					</foreach>
-			    </if>				
 			    AND 
 			    SOL.FTN_CVE_BANCO IN 
 			    <if test="cveBanco != null and (cveBanco.size() > 0 )">
@@ -151,12 +145,6 @@
 			FROM TTAFOAVOL_SOLICITUD SOL
 			WHERE 
 			    SOL.FTN_ESTATUS_SOLICITUD = 512        					-- ==> SOLICITUDES ACEPTADAS ( FIJO )
-			    AND SOL.FTN_ID_TIPO_CTA IN 
-			    <if test="tipoCta != null and (tipoCta.size() > 0 )">
-			    	<foreach item="cta"  index="index" collection="tipoCta" open="(" separator="," close=")">
-						#{cta}
-					</foreach>
-			    </if>				
 			    AND 
 			    SOL.FTN_CVE_BANCO IN 
 			    <if test="cveBanco != null and (cveBanco.size() > 0 )">
@@ -177,12 +165,6 @@
 			FROM TTAFOAVOL_SOLICITUD SOL
 			WHERE 
 			    SOL.FTN_ESTATUS_SOLICITUD = 512        					-- ==> SOLICITUDES ACEPTADAS ( FIJO )
-			    AND SOL.FTN_ID_TIPO_CTA IN 
-			    <if test="tipoCta != null and (tipoCta.size() > 0 )">
-			    	<foreach item="cta"  index="index" collection="tipoCta" open="(" separator="," close=")">
-						#{cta}
-					</foreach>
-			    </if>				
 			    AND 
 			    SOL.FTN_CVE_BANCO IN 
 			    <if test="cveBanco != null and (cveBanco.size() > 0 )">
@@ -220,12 +202,6 @@
 			JOIN TMSISGRAL_MAP_NCI_ITGY r_map ON r_map.TMN_CVE_NCI = SOL.FTN_CVE_BANCO AND TMC_USO = 'BANCOS'  and r_map.TMC_VIGENCIA = 1 and cbank.FCB_VIGENCIA =1
 			WHERE
 			    SOL.FTN_ESTATUS_SOLICITUD = 512        				-- ==> SOLICITUDES ACEPTADAS ( FIJO )
-			    AND SOL.FTN_ID_TIPO_CTA IN 
-			    <if test="tipoCta != null and (tipoCta.size() > 0 )">
-			    	<foreach item="cta"  index="index" collection="tipoCta" open="(" separator="," close=")">
-						#{cta}
-					</foreach>
-			    </if>				
 			    AND 
 			    SOL.FTN_CVE_BANCO NOT IN (460)         		
 			    AND SOL.FTD_FEH_PROX_CARGO BETWEEN TO_DATE( #{fechaInicio},'DD/MM/YYYY') AND TO_DATE(#{fechaFin},'DD/MM/YYYY')
@@ -245,12 +221,6 @@
 			JOIN TMSISGRAL_MAP_NCI_ITGY r_map ON r_map.TMN_CVE_NCI = SOL.FTN_CVE_BANCO AND TMC_USO = 'BANCOS'  and r_map.TMC_VIGENCIA = 1 and cbank.FCB_VIGENCIA =1
 			WHERE 
 			    SOL.FTN_ESTATUS_SOLICITUD = 512        					-- ==> SOLICITUDES ACEPTADAS ( FIJO )
-			    AND SOL.FTN_ID_TIPO_CTA IN 
-			    <if test="tipoCta != null and (tipoCta.size() > 0 )">
-			    	<foreach item="cta"  index="index" collection="tipoCta" open="(" separator="," close=")">
-						#{cta}
-					</foreach>
-			    </if>				
 			    AND 
 			    SOL.FTN_CVE_BANCO NOT IN (460) 
 			    AND SOL.FTD_FEH_PROX_CARGO BETWEEN TO_DATE( #{fechaInicio},'DD/MM/YYYY') AND TO_DATE( #{fechaFin},'DD/MM/YYYY')
@@ -269,12 +239,6 @@
 			JOIN TMSISGRAL_MAP_NCI_ITGY r_map ON r_map.TMN_CVE_NCI = SOL.FTN_CVE_BANCO AND TMC_USO = 'BANCOS'  and r_map.TMC_VIGENCIA = 1 and cbank.FCB_VIGENCIA =1
 			WHERE
 			    SOL.FTN_ESTATUS_SOLICITUD = 512        					-- ==> SOLICITUDES ACEPTADAS ( FIJO )
-			    AND SOL.FTN_ID_TIPO_CTA IN 
-			    <if test="tipoCta != null and (tipoCta.size() > 0 )">
-			    	<foreach item="cta"  index="index" collection="tipoCta" open="(" separator="," close=")">
-						#{cta}
-					</foreach>
-			    </if>				
 			    AND 
 			    SOL.FTN_CVE_BANCO NOT IN (460) 
 			    AND SOL.FTD_FEH_PROX_CARGO BETWEEN TO_DATE(#{fechaInicio},'DD/MM/YYYY') AND TO_DATE(#{fechaFin},'DD/MM/YYYY')

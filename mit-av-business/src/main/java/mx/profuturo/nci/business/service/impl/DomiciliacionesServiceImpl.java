@@ -322,9 +322,9 @@ public class DomiciliacionesServiceImpl implements IDomiciliacionesService{
 					val.setUnSoloArchivo(reg.isArchivoUnico());
 					val.getIdsBancos().add(Short.valueOf(reg.getCveBancoIncluir()));
 					
-					for(TiposCuentaDomiVO petDomi : reg.getTiposCuenta()) {
+					/*for(TiposCuentaDomiVO petDomi : reg.getTiposCuenta()) {
 						val.getIdsTiposCuenta().add(Short.valueOf(petDomi.getIdTipoCta()));
-					}
+					}*/
 					
 					i++;
 					map.getValues().put(key, val);
