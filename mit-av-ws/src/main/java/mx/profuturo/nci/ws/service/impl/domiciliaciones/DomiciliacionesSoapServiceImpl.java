@@ -608,10 +608,6 @@ public class DomiciliacionesSoapServiceImpl implements IDomiciliacionesSoapServi
 				tipoCtas = new ArrayList<Integer>();
 				cveBancos = new ArrayList<Integer>();
 
-				/*for (TiposCuentaDomiVO cta : reg.getTiposCuenta()) {
-					tipoCtas.add(Integer.parseInt(cta.getIdTipoCta()));
-				}*/
-
 				cveBancos.add(Integer.parseInt(reg.getCveBancoIncluir()));
 				cifrasTotalesAux = new ArrayList<CifrasTotalesDomiVO>();
 
@@ -992,12 +988,11 @@ public GeneracionArchivosDomiBeanResponse generarArchivosDomi(PeticionesDomiBean
                     idTipoCuentaGenerado = "0";
                     idBancoGenerado = "0";
                     idTipoArchivoGenerado = "0";
-                    
-                    nombreContrato = "PGA 961220PB4"; // Valor por defecto para null o cualquier otro banco
+        			nombreContrato = this.domiciliacionesService.getNombreContrato("11594");
                     if (filtro.getIdsBancos() != null && !filtro.getIdsBancos().isEmpty()) {
                         String primerBanco = String.valueOf(filtro.getIdsBancos().get(0));
                         if ("460".equals(primerBanco)) {
-                            nombreContrato = "PGA-961220PB4";
+                            nombreContrato = this.domiciliacionesService.getNombreContrato("9520");
                         }
                     }
                     // Try Catch propio para tratar resultados
@@ -1008,7 +1003,7 @@ public GeneracionArchivosDomiBeanResponse generarArchivosDomi(PeticionesDomiBean
 
                         generaciones = this.domiciliacionesService.generarArchivoDomiF4MantLotes(filtro, fechaHoy,
                                 filters.getIdOrigenDomiciliacion(), idArchivoGenerado, nombreContrato, filter);
-
+                        System.out.println("YA SALI DE LA GENERACION");
                         // Se traen las generaciones (posibles lotes)
                         for (RespGeneracionArchivosDomi gen : generaciones) {
                             archivoGenerado = new GeneracionArchivoDomiVO();
@@ -1018,6 +1013,8 @@ public GeneracionArchivosDomiBeanResponse generarArchivosDomi(PeticionesDomiBean
                             respGeneracion = gen.getIdArchivo();
 
                             archivoGenerado.setNombreArchivo(gen.getNombreArchivo());
+                            System.out.println("EL NOMBRE DEL ARCHIVO ES 1: " + archivoGenerado.getNombreArchivo());
+
                             if (respGeneracion != null && this.domiciliacionesService.isNumber(respGeneracion)
                                     && Long.parseLong(respGeneracion) > 0) {
 
@@ -1032,25 +1029,19 @@ public GeneracionArchivosDomiBeanResponse generarArchivosDomi(PeticionesDomiBean
                                 archivoGenerado.setGenerated(Boolean.FALSE);
                                 archivoGenerado.getErrors().add(respGeneracion);
                             }
+                            System.out.println("EL NOMBRE DEL ARCHIVO ES 2: " + archivoGenerado.getNombreArchivo());
 
                             // Se agrega resultado (independientemente si se generó o no) a la lista
                             // original
                             resultados.add(archivoGenerado);
 
                             // Se anexa ruta
-                            if (ID_BANAMEX_NCI.equals(filtro.getIdTipoArchivo())) {
-                                pathFile = PATH_ACHIVO_DOMI_BANAMEX;
-                            } else if (ID_BANCOMER_NCI.equals(filtro.getIdTipoArchivo())) {
+                            if (ID_BANCOMER_NCI.equals(filtro.getIdTipoArchivo())) {
                                 pathFile = PATH_ACHIVO_DOMI_BANCOMER;
                             }
+                            System.out.println("EL NOMBRE DEL ARCHIVO ES 2.1: " + archivoGenerado.getNombreArchivo());
 
-                            // Se determina el tipo de cuenta
-                            if (filtro.getIdsTiposCuenta() != null) {
-                                idTipoCuentaGenerado = (filtro.getIdsTiposCuenta().size() > 1) ? "0"
-                                        : String.valueOf(filtro.getIdsTiposCuenta().get(0));
-                            } else {
-                                idTipoCuentaGenerado = "0";
-                            }
+
 
                             // Se determina el banco ("Ctas a incluir")
                             if (filtro.getIdsBancos() != null && !filtro.getIdsBancos().isEmpty()) {
@@ -1061,9 +1052,11 @@ public GeneracionArchivosDomiBeanResponse generarArchivosDomi(PeticionesDomiBean
                                 idTipoContrato = "9520";
 
                             }
+                            System.out.println("EL NOMBRE DEL ARCHIVO ES 3: " + archivoGenerado.getNombreArchivo());
 
                             // Se determina tipo de archivo (unico o individual)
                             idTipoArchivoGenerado = (filtro.getArchivoUnico()) ? "1" : "2";
+                            System.out.println("EL NOMBRE DEL ARCHIVO ES 4: " + archivoGenerado.getNombreArchivo());
 
                             // Se registra en tabla relacion folio-archivo(s)
                             this.domiciliacionesService.registrarArchivoDomiBitacora(new OperacionDomiBitacoraFilter(
@@ -1107,7 +1100,8 @@ public GeneracionArchivosDomiBeanResponse generarArchivosDomi(PeticionesDomiBean
                                      CtrlResponseWSEnum.WS_ERROR.getMsgRet(),
                                      "Errro al responder la finalización de archivos a BUS");
         }
-
+        
+        System.out.println("LOS VALORES " + valores);
         // Formalización del response
         if (valores != null && !valores.isEmpty()) {
             response = new GeneracionArchivosDomiBeanResponse(CtrlResponseWSEnum.WS_OK.getCodRet(),

@@ -74,7 +74,7 @@ public class ConsumeWS {
     
     //SI mensaje			  == NULL OCUPARA plantilla como envelope
     //SI mensaje 			  != NULL OCUPARA plantilla y llenara plantilla con contenido de mensaje
-	public Object consumeWS( String mensaje, String plantilla, String URL ){
+ public Object consumeWS( String mensaje, String plantilla, String URL ){
 		
 		CloseableHttpClient httpclient		= null;
 		String xmlRequest					= null;
@@ -121,7 +121,8 @@ public class ConsumeWS {
 			
 		}
 	}
-	
+ 
+ 
 	private CloseableHttpClient generarHtppCliet( ){
 		
 		SSLContext context					= null;

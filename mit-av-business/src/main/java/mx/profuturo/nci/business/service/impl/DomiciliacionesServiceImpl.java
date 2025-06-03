@@ -901,7 +901,7 @@ public class DomiciliacionesServiceImpl implements IDomiciliacionesService{
 						}
 					}
 					
-				} else if ( contrato.equals("PGA 961220PB4") ) {
+				} else if ( contrato.equals("PGAA961220PB4") ) {
 					
 					if ( !idBancoGenerado.equals("460") ) { // Lotes
 						// Tamaño maximo de cada archivo
@@ -1060,7 +1060,7 @@ public class DomiciliacionesServiceImpl implements IDomiciliacionesService{
 					tamMax = Integer.parseInt(registrosMax.getCantidad());
 					//tamMax = 250; // 10000 
 				}
-			} else if ( contrato.equals("PGA 961220PB4") ) {
+			} else if ( contrato.equals("PGAA961220PB4") ) {
 				if( !bancoCuentas.equals("460") ) {
 					// Obtenemos la cantidad maxima de registros para archivo BBVA con cuentas distintas a BBVA
 					filter = new TipoRegistrosMaxFilter("9533");
@@ -1862,6 +1862,7 @@ public class DomiciliacionesServiceImpl implements IDomiciliacionesService{
 			}
 			
 			return nombreContrato;
+			
 		} catch (Exception ex) {
 			LOGGER.error( "ERROR UBICACIÓN     :" + DomiciliacionesServiceImpl.class.getCanonicalName() );
 			LOGGER.error( "ERROR METODO        :" + "getNombreContrato" );
