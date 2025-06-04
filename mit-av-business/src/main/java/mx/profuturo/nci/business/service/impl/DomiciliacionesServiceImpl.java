@@ -186,18 +186,15 @@ public class DomiciliacionesServiceImpl implements IDomiciliacionesService{
 	public List<CatalogosDomiVO> getCatalogosControlDomi(CatalogosDomiFilter filter) throws Exception {
 		try {
 			if (filter.getTipoCatalogo().equals("1")) {
-				return this.domiciliacionesPersistence.getCatalogoOrigenAportacionDomi();
-			} else if (filter.getTipoCatalogo().equals("2")) {
 				return this.domiciliacionesPersistence.getCatalogoOrigenBancosCuentasIncluir();
-			} else if (filter.getTipoCatalogo().equals("3")) {
+			} else if (filter.getTipoCatalogo().equals("2")) {
 				return this.domiciliacionesPersistence.getCatalogoOrigenBancosArchivosGenerar();
-			} else if (filter.getTipoCatalogo().equals("4")) {
-				return this.domiciliacionesPersistence.getCatalogoTiposCuenta();
-			} else if (filter.getTipoCatalogo().equals("5")) {
-				return this.domiciliacionesPersistence.getCatalogoContratoDomi();	
+			} else if (filter.getTipoCatalogo().equals("3")) {
+				return this.domiciliacionesPersistence.getCatalogoTipoEnvio();
 			} else {
 				return null;
 			}
+
 			
 		}catch( Exception e ) {
 			LOGGER.error( "ERROR UBICACIÓN    :" + IDomiciliacionesService.class.getCanonicalName());
@@ -694,7 +691,8 @@ public class DomiciliacionesServiceImpl implements IDomiciliacionesService{
 										        	   					   , Short origenDomi
 										        	   					   , Long idArchivoGenerado
 										        	   					   , String contrato
-										        	   					   , ArchivoDomiciliacionfilter filter) throws Exception {
+										        	   					   , ArchivoDomiciliacionfilter filter
+										        	   					   , String tipoEnvio) throws Exception {
 		
 		List<SolicitudVO> domis													= null;
 		List<CatPrioridadesDiversificacionesVO> catDivPrioridades 				= null; 
@@ -832,21 +830,23 @@ public class DomiciliacionesServiceImpl implements IDomiciliacionesService{
 							
 							swPar = fileGeneratorService.generateFileF4(lote);
 							LOGGER.info( swPar.getBuffer().toString() );
-							namePar.append(PATH_ACHIVO_DOMI_BANCOMER);
-							
-							namePar.append(archivo);
-							if( swPar!=null ) {
-								dfbPar.setFile(new File(namePar.toString()));
-								dfbPar.setStream(swPar.getBuffer().toString().getBytes());
-								boolean enviadoPar = fileTransferService.sendFile(dfbPar);
-								if(enviadoPar) {
-									arrArchivosGenerados.add(new RespGeneracionArchivosDomi (String.valueOf(idArchivo), archivo) );
-								} else {
-									actualizarSolicitudes = Boolean.FALSE;
-									arrArchivosGenerados.add(new RespGeneracionArchivosDomi ("El archivo no pudo escribirse en la ruta", "") );
-								}													
-							}
-							
+							if("Netcash".equalsIgnoreCase(tipoEnvio) || "Host To Host".equalsIgnoreCase(tipoEnvio)) {
+								namePar.append(PATH_ACHIVO_DOMI_BANCOMER);
+								namePar.append(archivo);
+								if( swPar!=null ) {
+									dfbPar.setFile(new File(namePar.toString()));
+									dfbPar.setStream(swPar.getBuffer().toString().getBytes());
+									boolean enviadoPar = fileTransferService.sendFile(dfbPar);
+									if(enviadoPar) {
+										arrArchivosGenerados.add(new RespGeneracionArchivosDomi (String.valueOf(idArchivo), archivo) );
+									} else {
+										actualizarSolicitudes = Boolean.FALSE;
+										arrArchivosGenerados.add(new RespGeneracionArchivosDomi ("El archivo no pudo escribirse en la ruta", "") );
+									}													
+								}
+							} else if ("HostToHost".equalsIgnoreCase(tipoEnvio)) {
+								//Logica Host to Host
+								}	
 						}
 						
 						// Se actuaizan los estatus
@@ -1872,6 +1872,23 @@ public class DomiciliacionesServiceImpl implements IDomiciliacionesService{
 		} finally {
 			 nombreContrato = null;
 		}
+	}
+	
+	public String obtenerTipoEnvio(String idTipoEnvio) throws Exception{
+		if (idTipoEnvio == null || idTipoEnvio.trim().isEmpty()){
+			return null;
+		}
+		
+		Integer id;
+		try {
+			id = Integer.parseInt(idTipoEnvio.trim());
+		} catch (NumberFormatException e) {
+			throw new IllegalArgumentException("El idTipoEnvio debe ser un numero entero valido", e);
+		}
+		
+        CatalogosDomiVO catalogo = this.domiciliacionesPersistence.getTipoEnvio(id);
+		
+		return (catalogo != null) ? catalogo.getDescripcion() : null;
 	}
 
 	public List<CifrasTotalesDomiVO> ordenarListaCifrasTotales(List<CifrasTotalesDomiVO> cifrasTotales) {

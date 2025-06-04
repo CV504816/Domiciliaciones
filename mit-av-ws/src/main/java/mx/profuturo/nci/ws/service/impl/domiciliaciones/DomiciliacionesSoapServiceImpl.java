@@ -939,6 +939,9 @@ public GeneracionArchivosDomiBeanResponse generarArchivosDomi(PeticionesDomiBean
     String nombreContrato = null;
     Boolean resouestaFinalizacionArch = null;
     String idTipoContrato = null; 
+	String tipoEnvio = null;
+
+
 
     try {
         // Validacion reponse nulo
@@ -962,6 +965,8 @@ public GeneracionArchivosDomiBeanResponse generarArchivosDomi(PeticionesDomiBean
                                     ? "No se encuntra el parametro de liberacion"
                                     : "Parametro de liberacion apagado");
         }
+
+		tipoEnvio = this.domiciliacionesService.obtenerTipoEnvio(request.getTipoEnvio());
 
         // Inicialización de variables
         resultados = new ArrayList<GeneracionArchivoDomiVO>();
@@ -1002,8 +1007,7 @@ public GeneracionArchivosDomiBeanResponse generarArchivosDomi(PeticionesDomiBean
                                 (filtro.getOrigenAportacion() != null ? filtro.getOrigenAportacion().getId() : null));
 
                         generaciones = this.domiciliacionesService.generarArchivoDomiF4MantLotes(filtro, fechaHoy,
-                                filters.getIdOrigenDomiciliacion(), idArchivoGenerado, nombreContrato, filter);
-                        System.out.println("YA SALI DE LA GENERACION");
+                                filters.getIdOrigenDomiciliacion(), idArchivoGenerado, nombreContrato, filter, tipoEnvio);
                         // Se traen las generaciones (posibles lotes)
                         for (RespGeneracionArchivosDomi gen : generaciones) {
                             archivoGenerado = new GeneracionArchivoDomiVO();
@@ -1013,7 +1017,6 @@ public GeneracionArchivosDomiBeanResponse generarArchivosDomi(PeticionesDomiBean
                             respGeneracion = gen.getIdArchivo();
 
                             archivoGenerado.setNombreArchivo(gen.getNombreArchivo());
-                            System.out.println("EL NOMBRE DEL ARCHIVO ES 1: " + archivoGenerado.getNombreArchivo());
 
                             if (respGeneracion != null && this.domiciliacionesService.isNumber(respGeneracion)
                                     && Long.parseLong(respGeneracion) > 0) {
@@ -1029,7 +1032,6 @@ public GeneracionArchivosDomiBeanResponse generarArchivosDomi(PeticionesDomiBean
                                 archivoGenerado.setGenerated(Boolean.FALSE);
                                 archivoGenerado.getErrors().add(respGeneracion);
                             }
-                            System.out.println("EL NOMBRE DEL ARCHIVO ES 2: " + archivoGenerado.getNombreArchivo());
 
                             // Se agrega resultado (independientemente si se generó o no) a la lista
                             // original
@@ -1039,9 +1041,6 @@ public GeneracionArchivosDomiBeanResponse generarArchivosDomi(PeticionesDomiBean
                             if (ID_BANCOMER_NCI.equals(filtro.getIdTipoArchivo())) {
                                 pathFile = PATH_ACHIVO_DOMI_BANCOMER;
                             }
-                            System.out.println("EL NOMBRE DEL ARCHIVO ES 2.1: " + archivoGenerado.getNombreArchivo());
-
-
 
                             // Se determina el banco ("Ctas a incluir")
                             if (filtro.getIdsBancos() != null && !filtro.getIdsBancos().isEmpty()) {
@@ -1052,11 +1051,9 @@ public GeneracionArchivosDomiBeanResponse generarArchivosDomi(PeticionesDomiBean
                                 idTipoContrato = "9520";
 
                             }
-                            System.out.println("EL NOMBRE DEL ARCHIVO ES 3: " + archivoGenerado.getNombreArchivo());
 
                             // Se determina tipo de archivo (unico o individual)
                             idTipoArchivoGenerado = (filtro.getArchivoUnico()) ? "1" : "2";
-                            System.out.println("EL NOMBRE DEL ARCHIVO ES 4: " + archivoGenerado.getNombreArchivo());
 
                             // Se registra en tabla relacion folio-archivo(s)
                             this.domiciliacionesService.registrarArchivoDomiBitacora(new OperacionDomiBitacoraFilter(

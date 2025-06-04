@@ -427,4 +427,12 @@
 			     FCC_VALOR              AS DESCRIPCION
 			FROM TCCRXGRAL_CAT_CATALOGO WHERE FCN_ID_CAT_CATALOGO IN (9520, 9519)
 	</select>
+	
+	<select id="getTipoEnvio"
+			resultMap="ResultMapCatalogosControl">
+			SELECT
+				FCN_ID_CAT_CATALOGO 	AS ID,
+				FCC_VALOR				AS DESCRIPCION
+			FROM TCCRXGRAL_CAT_CATALOGO WHERE FCN_ID_CAT_CATALOGO = #{idTipoEnvio}
+	</select>
 </mapper>

@@ -39,4 +39,8 @@ public interface DomiciliacionesPersistence {
 	public List<ArchivosGeneradosDomiVO> ultimosArchivosGenerados(UltimosArchivosGeneradosFilter filter)throws Exception;
 	
 	public List<CatalogosDomiVO> getCatalogoContratoDomi() throws Exception;
+	
+	public List<CatalogosDomiVO> getCatalogoTipoEnvio() throws Exception;
+	
+	public CatalogosDomiVO getTipoEnvio(Integer idTipoEnvio) throws Exception;
 }

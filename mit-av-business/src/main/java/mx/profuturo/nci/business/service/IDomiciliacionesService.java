@@ -66,7 +66,7 @@ public interface IDomiciliacionesService {
 	
 	public String generarArchivoDomiF4Mant (SolicitudFilter solicitudFilter,Date fecha,String archivo,Integer consecutivo, Short origenDomi, Long idArchivoGenerado) throws Exception;
 	
-	public List <RespGeneracionArchivosDomi> generarArchivoDomiF4MantLotes (SolicitudFilter solicitudFilter ,Date fecha ,Short origenDomi ,Long idArchivoGenerado, String contrato, ArchivoDomiciliacionfilter filter) throws Exception;
+	public List <RespGeneracionArchivosDomi> generarArchivoDomiF4MantLotes (SolicitudFilter solicitudFilter ,Date fecha ,Short origenDomi ,Long idArchivoGenerado, String contrato, ArchivoDomiciliacionfilter filter, String tipoEnvio) throws Exception;
 	
 	public CtrlArchivoDomisBean generarIdArchivoDomis( ArchivoDomisFilter filter ) throws Exception;
 	
@@ -91,4 +91,7 @@ public interface IDomiciliacionesService {
 	public List<RegistrosArchivoVO> consultarRegistrosArchivo(TablaDinamicaArchDomiFilter filter) throws Exception;
 	
 	public Boolean responderFinalizacionArchivosDomi (String folio) throws Exception;
+	
+	public String obtenerTipoEnvio(String idTipoEnvio) throws Exception;
+
 }

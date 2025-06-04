@@ -10,13 +10,15 @@ import mx.profuturo.nci.business.util.UtilValidate;
 import mx.profuturo.nci.business.vo.PeticionDomiciliacionVO;
 import mx.profuturo.nci.business.vo.ValidacionesVO;
 
-@XmlType(propOrder={"fechaInicio","fechaFin", "usuario", "folio", "peticiones"})
+@XmlType(propOrder={"fechaInicio","fechaFin", "usuario", "folio", "peticiones", "tipoEnvio"})
 public class PeticionesDomiBeanRequest {
 	private String fechaInicio;
 	private String fechaFin;
 	private String usuario;
 	private String folio;
 	private List <PeticionDomiciliacionVO> peticiones;
+	private String tipoEnvio;
+
 	
 	public PeticionesDomiBeanRequest () {
 		
@@ -36,12 +38,14 @@ public class PeticionesDomiBeanRequest {
 								 	 , String fechaFin
 								 	 , String usuario
 								 	 , List <PeticionDomiciliacionVO> peticiones
-								 	 , String folio) {
+								 	 , String folio
+								 	, String tipoEnvio) {
 		this.fechaInicio = fechaInicio;
 		this.fechaFin = fechaFin;
 		this.usuario = usuario;
 		this.peticiones = peticiones;
 		this.folio = folio;
+		this.tipoEnvio = tipoEnvio;
 	}
 
 
@@ -87,6 +91,15 @@ public class PeticionesDomiBeanRequest {
 		this.peticiones = peticiones;
 	}
 	
+	public String getTipoEnvio() {
+		return tipoEnvio;
+	}
+	
+	public void setTipoEnvio(String tipoEnvio) {
+		this.tipoEnvio = tipoEnvio;
+	}
+
+	
 	public ValidacionesVO validarRequestCifras() {
 		
 		
@@ -105,6 +118,10 @@ public class PeticionesDomiBeanRequest {
 		if (this.usuario == null || this.usuario.isEmpty()) {
 			return new ValidacionesVO( Boolean.FALSE, "peticiones, por favor ingrese 'usuario' " );
 		}
+		
+		if (this.tipoEnvio == null || this.tipoEnvio.isEmpty()) {
+	        return new ValidacionesVO(Boolean.FALSE, "tipoEnvio es requerido");
+	    }
 		
 		return new ValidacionesVO( Boolean.TRUE , "Validacion exitosa." );
 	}
@@ -131,6 +148,10 @@ public class PeticionesDomiBeanRequest {
 		if (!UtilValidate.validaFormatoIntegerF4(this.folio, 20)) {
 			return new ValidacionesVO( Boolean.FALSE, "Validar formato de folio, LONG MAX 20" );
 		}
+		
+		if (this.tipoEnvio == null || this.tipoEnvio.isEmpty()) {
+	        return new ValidacionesVO(Boolean.FALSE, "tipoEnvio es requerido");
+	    }
 			
 		return new ValidacionesVO( Boolean.TRUE , "Validacion exitosa." );
 	}
