@@ -4,7 +4,6 @@ import mx.profuturo.nci.business.util.UtilValidate;
 import mx.profuturo.nci.business.vo.ValidacionesVO;
 
 public class UltimosArchivosGeneradosBeanRequest {
-	private String origenAportacion;
 	private String cuentasIncluir;
 	private String archivoGenerar;
 	
@@ -12,18 +11,13 @@ public class UltimosArchivosGeneradosBeanRequest {
 		
 	}
 	
-	public UltimosArchivosGeneradosBeanRequest( String origenAportacion
-											  , String cuentasIncluir
+	public UltimosArchivosGeneradosBeanRequest( String cuentasIncluir
 											  , String archivoGenerar) {
-		this.origenAportacion = origenAportacion;
 		this.cuentasIncluir = cuentasIncluir;
 		this.archivoGenerar = archivoGenerar;
 	}
 
 	public ValidacionesVO validarOrigenAportacion() {
-		if( !UtilValidate.validaFormatoIntegerF4(this.origenAportacion, 5) ) {
-			return new ValidacionesVO( Boolean.FALSE, "Validar formato origenAportacion, LONG MAX 5" );
-		}
 		return new ValidacionesVO( Boolean.TRUE , "Validacion exitosa." );
 	}
 	
@@ -40,13 +34,6 @@ public class UltimosArchivosGeneradosBeanRequest {
 		return new ValidacionesVO( Boolean.TRUE , "Validacion exitosa." );
 	}
 	
-	public String getOrigenAportacion() {
-		return origenAportacion;
-	}
-
-	public void setOrigenAportacion(String origenAportacion) {
-		this.origenAportacion = origenAportacion;
-	}
 
 	public String getCuentasIncluir() {
 		return cuentasIncluir;

@@ -533,7 +533,7 @@ public class DomiciliacionesSoapServiceImpl implements IDomiciliacionesSoapServi
 				}
 
 				valores = this.domiciliacionesService.ultimosArchivosGenerados(new UltimosArchivosGeneradosFilter(
-						request.getOrigenAportacion(), request.getCuentasIncluir(), request.getArchivoGenerar()));
+						request.getCuentasIncluir(), request.getArchivoGenerar()));
 
 				response = new ArchivosGeneradosDomiBeanResponse(
 						(valores.isEmpty()) ? CtrlResponseWSEnum.WS_NO_RECORD.getCodRet()
@@ -584,7 +584,14 @@ public class DomiciliacionesSoapServiceImpl implements IDomiciliacionesSoapServi
 		DecimalFormat formatterPesos = null;
 		DecimalFormat formatterCount = null;
 		Boolean cifrasTotalesConPeriodos = null;
-		
+		Double sumaMontoTotalCliente = 0.0;
+	    int sumaRegistrosCliente = 0;
+	    Double sumaMontoTotalProspecto = 0.0;
+	    int sumaRegistrosProspecto = 0;
+	    Double sumaMontoBBVA = 0.0;
+	    int sumaRegistrosTotalBBVA= 0;
+	    Double sumaMontoInterbancario = 0.0;
+	    int sumaRegistrosTotalInterbancario = 0;
 
 		try {
 			// Validacion reponse nulo
@@ -734,12 +741,132 @@ public class DomiciliacionesSoapServiceImpl implements IDomiciliacionesSoapServi
 							);
 						}
 
+						// Procesar los totales para cada origen y bancoAdd commentMore actions
+						for (TotalesRegistroDomiVO total : totales) {
+						    String totalString = total.getTotal().replace("$", "").replace(",", "");
 
+						    // Procesar importes y registros cliente
+						    if ("0".equals(total.getOrigenAportacion())) {
+						        if ("IMPORTE TOTAL".equals(total.getDescripcion()) && !totalString.isEmpty()) {
+						        	sumaMontoTotalCliente += Double.parseDouble(totalString);
+						        }
+						        if ("TOTAL REGISTROS".equals(total.getDescripcion()) && !totalString.isEmpty()) {
+						        	sumaRegistrosCliente += Integer.parseInt(totalString.replace(",", ""));
+						        }
+						    }
+
+						    // Procesar importes y registros prospecto
+						    if ("845".equals(total.getOrigenAportacion())) {
+						        if ("IMPORTE TOTAL".equals(total.getDescripcion()) && !totalString.isEmpty()) {
+						        	sumaMontoTotalProspecto += Double.parseDouble(totalString);
+						        }
+						        if ("TOTAL REGISTROS".equals(total.getDescripcion()) && !totalString.isEmpty()) {
+						        	sumaRegistrosProspecto += Integer.parseInt(totalString.replace(",", ""));
+						        }
+						    }
+
+						    // Procesar importes y registros BBVA
+						    if ("460".equals(reg.getCveBancoIncluir())) {
+						        if ("IMPORTE TOTAL".equals(total.getDescripcion()) && !totalString.isEmpty()) {
+						        	sumaMontoBBVA += Double.parseDouble(totalString);
+						        }
+						        if ("TOTAL REGISTROS".equals(total.getDescripcion()) && !totalString.isEmpty()) {
+						        	sumaRegistrosTotalBBVA += Integer.parseInt(totalString.replace(",", ""));
+						        }
+						    }
+
+						    // Procesar importes  y registros interbancario
+						    if ("848".equals(reg.getCveBancoIncluir())) {
+						        if ("IMPORTE TOTAL".equals(total.getDescripcion()) && !totalString.isEmpty()) {
+						        	sumaMontoInterbancario += Double.parseDouble(totalString);
+						        }
+						        if ("TOTAL REGISTROS".equals(total.getDescripcion()) && !totalString.isEmpty()) {
+						        	sumaRegistrosTotalInterbancario += Integer.parseInt(totalString.replace(",", ""));
+						        }
+						    }
+						}
+						
 						registroCifraAux.setTotales(totales);
 						registros.add(registroCifraAux);
 					}
 			}
 
+			// Registro para el importe total y total de registros (clientes)Add commentMore actions
+			RegistroCifrasDomiVO nuevaCifraMontoCliente = new RegistroCifrasDomiVO();
+			List<TotalesRegistroDomiVO> totalesMontoCliente = new ArrayList<TotalesRegistroDomiVO>();
+			TotalesRegistroDomiVO totalMontoCliente = new TotalesRegistroDomiVO();
+			totalMontoCliente.setDescripcion("MONTO CLIENTE TOTAL");
+			totalMontoCliente.setTotal("$" + formatterPesos.format(sumaMontoTotalCliente));
+			totalesMontoCliente.add(totalMontoCliente);
+
+			TotalesRegistroDomiVO totalRegistroCliente = new TotalesRegistroDomiVO();
+			totalRegistroCliente.setDescripcion("REGISTROS CLIENTE TOTAL");
+			totalRegistroCliente.setTotal(formatterCount.format(sumaRegistrosCliente));
+			totalesMontoCliente.add(totalRegistroCliente);
+
+			nuevaCifraMontoCliente.setTotales(totalesMontoCliente);
+			registros.add(nuevaCifraMontoCliente);
+
+			// Registro para el importe total y total de registros (prospecto)
+			RegistroCifrasDomiVO nuevaCifraMontoProspecto = new RegistroCifrasDomiVO();
+			List<TotalesRegistroDomiVO> totalesMontoProspecto = new ArrayList<TotalesRegistroDomiVO>();
+			TotalesRegistroDomiVO totalMontoProspecto = new TotalesRegistroDomiVO();
+			totalMontoProspecto.setDescripcion("MONTO PROSPECTO TOTAL");
+			totalMontoProspecto.setTotal("$" + formatterPesos.format(sumaMontoTotalProspecto));
+			totalesMontoProspecto.add(totalMontoProspecto);
+
+			TotalesRegistroDomiVO totalRegistrosProspecto = new TotalesRegistroDomiVO();
+			totalRegistrosProspecto.setDescripcion("REGISTROS PROSPECTO TOTAL");
+			totalRegistrosProspecto.setTotal(formatterCount.format(sumaRegistrosProspecto));
+			totalesMontoProspecto.add(totalRegistrosProspecto);
+
+			nuevaCifraMontoProspecto.setTotales(totalesMontoProspecto);
+			registros.add(nuevaCifraMontoProspecto);
+
+			List<TotalesRegistroDomiVO> totalesCombinados = new ArrayList<TotalesRegistroDomiVO>();
+
+			// MONTO TOTAL GENERAL MISMO BANCO
+			TotalesRegistroDomiVO totalBBVA = new TotalesRegistroDomiVO();
+			totalBBVA.setDescripcion("MONTO TOTAL GENERAL MISMO BANCO");
+			totalBBVA.setTotal("$" + formatterPesos.format(sumaMontoBBVA));
+			totalesCombinados.add(totalBBVA);
+
+			// REGISTROS TOTAL GENERAL MISMO BANCO
+			TotalesRegistroDomiVO totalRegistrosBBVA = new TotalesRegistroDomiVO();
+			totalRegistrosBBVA.setDescripcion("REGISTROS TOTAL GENERAL MISMO BANCO");
+			totalRegistrosBBVA.setTotal(formatterCount.format(sumaRegistrosTotalBBVA));
+			totalesCombinados.add(totalRegistrosBBVA);
+
+			// MONTO TOTAL GENERAL INTERBANCARIO
+			TotalesRegistroDomiVO totalInterbancario = new TotalesRegistroDomiVO();
+			totalInterbancario.setDescripcion("MONTO TOTAL GENERAL INTERBANCARIO");
+			totalInterbancario.setTotal("$" + formatterPesos.format(sumaMontoInterbancario));
+			totalesCombinados.add(totalInterbancario);
+
+			// REGISTROS TOTAL GENERAL INTERBANCARIO
+			TotalesRegistroDomiVO totalRegistrosInterbancario = new TotalesRegistroDomiVO();
+			totalRegistrosInterbancario.setDescripcion("REGISTROS TOTAL GENERAL INTERBANCARIO");
+			totalRegistrosInterbancario.setTotal(formatterCount.format(sumaRegistrosTotalInterbancario));
+			totalesCombinados.add(totalRegistrosInterbancario);
+
+			// MONTO TOTAL GENERAL TOTAL
+			double totalGeneral = sumaMontoBBVA + sumaMontoInterbancario;
+			TotalesRegistroDomiVO totalGeneralSumado = new TotalesRegistroDomiVO();
+			totalGeneralSumado.setDescripcion("MONTO TOTAL GENERAL TOTAL");
+			totalGeneralSumado.setTotal("$" + formatterPesos.format(totalGeneral));
+			totalesCombinados.add(totalGeneralSumado);
+
+			// REGISTROS TOTAL GENERAL TOTAL
+			int totalRegistros = sumaRegistrosTotalBBVA + sumaRegistrosTotalInterbancario;
+			TotalesRegistroDomiVO totalRegistrosSumado = new TotalesRegistroDomiVO();
+			totalRegistrosSumado.setDescripcion("REGISTROS TOTAL GENERAL TOTAL");
+			totalRegistrosSumado.setTotal(formatterCount.format(totalRegistros));
+			totalesCombinados.add(totalRegistrosSumado);
+
+			RegistroCifrasDomiVO nuevaCifraSumada = new RegistroCifrasDomiVO();
+			nuevaCifraSumada.setTotales(totalesCombinados);
+			registros.add(nuevaCifraSumada);
+						
 
 			// Armado de response
 			response = new CifrasDomiBeanResponse(CtrlResponseWSEnum.WS_OK.getCodRet(),

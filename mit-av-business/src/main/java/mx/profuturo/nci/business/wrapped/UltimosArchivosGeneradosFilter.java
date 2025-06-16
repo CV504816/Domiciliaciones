@@ -2,7 +2,6 @@ package mx.profuturo.nci.business.wrapped;
 
 public class UltimosArchivosGeneradosFilter {
 
-	private String origenAportacion;
 	private String cuentasIncluir;
 	private String archivoGenerar;
 
@@ -10,19 +9,11 @@ public class UltimosArchivosGeneradosFilter {
 
 	}
 
-	public UltimosArchivosGeneradosFilter(String origenAportacion, String cuentasIncluir, String archivoGenerar) {
-		this.origenAportacion = origenAportacion;
+	public UltimosArchivosGeneradosFilter(String cuentasIncluir, String archivoGenerar) {
 		this.cuentasIncluir = cuentasIncluir;
 		this.archivoGenerar = archivoGenerar;
 	}
 
-	public String getOrigenAportacion() {
-		return origenAportacion;
-	}
-
-	public void setOrigenAportacion(String origenAportacion) {
-		this.origenAportacion = origenAportacion;
-	}
 
 	public String getCuentasIncluir() {
 		return cuentasIncluir;

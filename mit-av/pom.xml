@@ -35,7 +35,7 @@
   
   <modules>
     <module>../mit-av-business</module>
-    <module>../mit-av-ws</module>
+    <module>../mit-av-web</module>
   </modules>
  
    <dependencyManagement>
